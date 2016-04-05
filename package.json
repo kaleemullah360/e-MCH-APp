@@ -1,7 +1,9 @@
 {
   "name": "e-MCH-APp",
-  "version": "0.0.0",
+  "version": "2.1.0",
+  "description": "e-MCH-APp | Evaluation. The realtime graph plots for MQTT (Message Queuing Telemetry Transport), CoAP (Constrained Application Protocol), HTTP (Hyper Text Transfer Protocol)",
   "private": true,
+  "main": "./bin/www",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -15,5 +17,17 @@
     "morgan": "~1.6.1",
     "mqtt": "^1.7.4",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaleemullah360/e-MCH-APp.git"
+  },
+  "author": "Kaleem Ullah <mscs14059@itu.edu.pk>",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "email": "kaleemullah360@live.com",
+      "name": "KaleemUllah360"
+    }
+  ]
 }
