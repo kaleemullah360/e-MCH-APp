@@ -80,7 +80,7 @@ return false;
 /**
  * Event listener for HTTP server "listening" event.
  */
-function get_coap_http_on_mqtt_publish(){};
+
 
 var io = require('socket.io')(server);
 io.on('connection', function(socket){
@@ -145,9 +145,9 @@ var http_mote_url = 'aaaa::c30c:0:0:c';
 }
 
 var c_data = "";
-var m_battery = 0.5;
-var c_battery = 0.5;
-var h_battery = 0.5;
+var m_battery = 100;
+var c_battery = 100;
+var h_battery = 100;
 var h_uptime =  10;
 //	<---- MQTT response ---------->
 
@@ -170,19 +170,17 @@ m_client.on('message', function(topic, m_data) {
 
       m_battery = string[4];
       if(string[4].indexOf("RSSI (dBm)") > -1){
-      	m_battery = "0.5";
+      	m_battery = "100";
       }
       connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
       	if (err) throw err;
       });
 //	<---- End MQTT: Prepare Data for Battery ---------->
-
-get_coap_http_on_mqtt_publish();
-
 });
 //	<---- End MQTT response ---------->
 
-function get_coap_http_on_mqtt_publish() {
+//	polling function
+var interval = setInterval(function() {
 
 //	<---- CoAP response ---------->
 
@@ -249,4 +247,4 @@ request('http://['+http_mote_url+']', function (error, response, h_payload) {
 //	<---- ENd HTTP response ---------->
 io.sockets.emit('wsn-data', {"data": ''+h_uptime+','+m_battery+','+c_battery+','+h_battery+''}); // emit data to view/browser when response is arrived
 console.log(''+h_uptime+','+m_battery+','+c_battery+','+h_battery+'');
-};
+}, milliseconds)	//	end polling function

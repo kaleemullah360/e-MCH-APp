@@ -42,7 +42,7 @@ html
   body
     #content
       form#side_panel
-        h1 Random Data in the Future
+        h1 e-MCH-APp | Battery Evaluation in MQTT, CoAP, HTTP.
         section
           #legend
         section
@@ -89,17 +89,18 @@ html
         #preview
     script.
       // set up our data series with 150 random data points
-      var seriesData = [ [], [], [], [], [], [], [], [], [] ];
-      var random = new Rickshaw.Fixtures.RandomData(150);
-      for (var i = 0; i < 150; i++) {
-      random.addData(seriesData);
-      }
+      var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }]];
+      //var random = new Rickshaw.Fixtures.RandomData(150);
+      //for (var i = 0; i < 150; i++) {
+      //random.addData(seriesData);}
       var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
       // instantiate our graph!
       var graph = new Rickshaw.Graph( {
       element: document.getElementById("chart"),
       width: 900,
       height: 500,
+      min: 0.000,
+      max: 0.500,
       renderer: 'area',
       stroke: true,
       preserve: true,
@@ -107,31 +108,15 @@ html
       {
       color: palette.color(),
       data: seriesData[0],
-      name: 'Moscow'
+      name: 'MQTT'
       }, {
       color: palette.color(),
       data: seriesData[1],
-      name: 'Shanghai'
+      name: 'CoAP'
       }, {
       color: palette.color(),
       data: seriesData[2],
-      name: 'Amsterdam'
-      }, {
-      color: palette.color(),
-      data: seriesData[3],
-      name: 'Paris'
-      }, {
-      color: palette.color(),
-      data: seriesData[4],
-      name: 'Tokyo'
-      }, {
-      color: palette.color(),
-      data: seriesData[5],
-      name: 'London'
-      }, {
-      color: palette.color(),
-      data: seriesData[6],
-      name: 'New York'
+      name: 'HTTP'
       }
       ]
       } );
@@ -200,11 +185,22 @@ html
       ];
     script(src='js/socket.io.js')
     script.
+      var counter = 0;
       var socket = io();
       socket.on('wsn-data', function(payload){
-      console.log("wsn-data",payload);
-      random.removeData(seriesData);
-      random.addData(seriesData);
+      //''+h_uptime+','+m_battery+','+c_battery+','+h_battery+''
+      var string = "";
+      console.log(payload.data);
+      string = payload.data.split(",");
+      h_uptime = parseInt(string[0]);
+      m_battery = parseInt(string[1]);
+      c_battery = parseInt(string[2]);
+      h_battery = parseInt(string[3]);
+      seriesData[0].push( { x: h_uptime, y: m_battery } );
+      seriesData[1].push( { x: h_uptime, y: c_battery } );
+      seriesData[2].push( { x: h_uptime, y: h_battery } );
+      //random.removeData(seriesData);
+      //random.addData(seriesData);
       graph.update();
       });
       function addAnnotation(force) {
