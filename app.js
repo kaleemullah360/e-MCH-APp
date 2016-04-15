@@ -8,6 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var getCoapData = require('./routes/getCoapData');
+var getMqttData = require('./routes/getMqttData');
+var getHttpData = require('./routes/getHttpData');
+
 var app = express();
 
 // view engine setup
@@ -24,6 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+app.use('/getCoapData', getCoapData);
+app.use('/getMqttData', getMqttData);
+app.use('/getHttpData', getHttpData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

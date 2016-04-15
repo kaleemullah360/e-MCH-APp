@@ -104,6 +104,8 @@ io.on('connection', function(socket){
 /**
  * Event listener for MQTT CoAP & HTTP Protocol.
  */
+/*
+
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -254,3 +256,4 @@ request('http://['+http_mote_url+']', function (error, response, h_payload) {
 io.sockets.emit('wsn-data', {"data": ''+h_uptime+','+m_battery+','+c_battery+','+h_battery+''}); // emit data to view/browser when response is arrived
 console.log(''+h_uptime+','+m_battery+','+c_battery+','+h_battery+'');
 };
+*/
