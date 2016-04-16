@@ -16,13 +16,9 @@ router.get('/', function(req, res, next) {
 
 	client.on('message', function(topic, m_message) {
 		console.log(decoder.write(m_message));
-		if(!message === m_message){
 			message = m_message;
-		}
 	});
-	if (!message == m_message){
-		res.send(decoder.write(message));
-	}
+res.send(decoder.write(message));
 });
 
 module.exports = router;

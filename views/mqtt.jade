@@ -1,0 +1,45 @@
+doctype strict
+html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
+  script(type='text/javascript', src='js/jquery-2.2.0.min.js')
+  title Zolertia Temperature
+  body
+    h3 MQTT Request Response Time
+    label IPV6 Address:
+    input#mote-url(type='text', value='aaaa::c30c:0:0:2')
+    label No of Packets:
+    input#mote-index(type='number', value='100')
+    label Request Interval (milliseconds):
+    input#mote-interval(type='number', value='1000')
+    button(autofocus='', onclick='javascript: get_values()') Start
+    hr
+    ol#show-temp
+  script(type='text/javascript').
+    console.log(requestOption);
+    function get_values() {
+    var index = 1;
+    var ip = document.getElementById('mote-url').value;
+    var limit = document.getElementById('mote-index').value;
+    var miliseconds = document.getElementById('mote-interval').value;
+    var url = 'http://[' + ip + ']';
+    window.setInterval(function () {
+    if (index <= limit) {
+    $(function () {
+    $.ajax({
+    type: 'GET',
+    cache: false,
+    dataType: 'json',
+    url: url,
+    success: function(data) {
+    $('#show-temp').append('<li>data</li>');
+    },
+    error: function(data) {
+    }
+    });
+    });
+    } else {
+    return;
+    }
+    console.log("MSGiD" + index);
+    index++;
+    }, miliseconds);
+    }

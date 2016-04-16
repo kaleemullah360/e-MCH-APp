@@ -8,6 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var mqtt = require('./routes/mqtt');
+var coap = require('./routes/coap');
+var http = require('./routes/http');
+
 var getCoapData = require('./routes/getCoapData');
 var getMqttData = require('./routes/getMqttData');
 var getHttpData = require('./routes/getHttpData');
@@ -28,6 +32,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+app.use('/mqtt', mqtt);
+app.use('/coap', coap);
+app.use('/http', http);
 
 app.use('/getCoapData', getCoapData);
 app.use('/getMqttData', getMqttData);
