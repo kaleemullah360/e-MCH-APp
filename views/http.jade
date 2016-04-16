@@ -10,27 +10,25 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     input#mote-index(type='number', value='100')
     label Request Interval (milliseconds):
     input#mote-interval(type='number', value='1000')
-    button(autofocus='', onclick='javascript: get_values()') Start
+    button(autofocus='', type='button', onclick='javascript: get_values()') Start
     hr
     ol#show-temp
   script(type='text/javascript').
-    console.log(requestOption);
     function get_values() {
     var index = 1;
     var ip = document.getElementById('mote-url').value;
     var limit = document.getElementById('mote-index').value;
     var miliseconds = document.getElementById('mote-interval').value;
-    var url = 'http://[' + ip + ']';
+    var url = 'http://localhost:3000/getHttpData?uri=' + ip;
     window.setInterval(function () {
     if (index <= limit) {
     $(function () {
     $.ajax({
     type: 'GET',
     cache: false,
-    dataType: 'json',
     url: url,
     success: function(data) {
-    $('#show-temp').append('<li>data</li>');
+    $('#show-temp').append('<li><span>' + data + '</span></li>');
     },
     error: function(data) {
     }
