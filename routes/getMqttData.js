@@ -3,9 +3,8 @@ var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:4';
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
-message = "";
 m_payload = "";
-
+var Protocol = "MQTT_10Sec_1Hop";
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -24,11 +23,13 @@ client.subscribe('iot-2/evt/status/fmt/json');
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
 	var mote_uri = req.query.uri;
-
-	client.on('message', function(topic, m_payload) {
-		m_payload = decoder.write(message);
-			message = m_payload;
-			//client.end();
+	var start = new Date();
+	client.on('message', function(topic, payload) {
+		var RTT = new Date() - start;
+		start = new Date();
+		//console.info("Execution time: %dms", RTT);
+		m_payload = decoder.write(payload);
+		//client.end();
 
 		//  populate database
 	      //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
@@ -41,12 +42,12 @@ router.get('/', function(req, res, next) {
 	      var Temperature = string[3];
 	      var Battery = string[4];
 	      var PowTrace = string[5];
-	      var Protocol = "MQTT";
-	      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+	      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
 	      	if (err) throw err;
 	      });
+
 	});
-res.send(message);
+res.send(m_payload);
 });
 
 module.exports = router;

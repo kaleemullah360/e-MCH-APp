@@ -3,7 +3,7 @@ var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
-
+var Protocol = "CoAP_0.5Sec_3Hop";
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -20,8 +20,11 @@ var coap        = require('coap')
 //	http://localhost:3000/getCoapData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
 	var mote_uri = req.query.uri;
+	var start = new Date();
 	var req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
 	req.on('response', function(c_res) {
+		var RTT = new Date() - start;
+		//console.info("Execution time: %dms", RTT);
 		c_payload = decoder.write(c_res.payload);
 		//  populate database
 	      //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
@@ -34,8 +37,7 @@ router.get('/', function(req, res, next) {
 	      var Temperature = string[3];
 	      var Battery = string[4];
 	      var PowTrace = string[5];
-	      var Protocol = "CoAP";
-	      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+	      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
 	      	if (err) throw err;
 	      });
 
