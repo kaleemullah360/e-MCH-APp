@@ -80,19 +80,6 @@ return false;
 /**
  * Event listener for HTTP server "listening" event.
  */
-function get_coap_http_on_mqtt_publish(){};
-
-var io = require('socket.io')(server);
-io.on('connection', function(socket){
-	console.log("User Connected");
-  // Not a Good Way
-  socket.emit('wsn-data',{data: "10,100,100,100,100"});
-
-  socket.on('disconnect', function () {
-  	console.log("User Disconnected");
-  });
-
-});
 
  function onListening() {
  	var addr = server.address();
@@ -101,10 +88,25 @@ io.on('connection', function(socket){
  	: 'port ' + addr.port;
  	debug('Listening on ' + bind);
  }
+
+function get_coap_http_on_mqtt_publish(){};
+
+var io = require('socket.io')(server);
+io.on('connection', function(socket){
+	console.log("User Connected");
+  // Not a Good Way
+  //socket.emit('wsn-data',{data: "10,100,100,100,100"});
+
+  socket.on('disconnect', function () {
+  	console.log("User Disconnected");
+  });
+
+});
+
 /**
  * Event listener for MQTT CoAP & HTTP Protocol.
  */
-/*
+
 
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
@@ -115,11 +117,44 @@ var connection = mysql.createConnection({
   database : 'e-mch' // app database name
 });
 connection.connect();
-
+var Protocol = "MQTT_10Sec_3Hop";
  // initialize required libs
  const StringDecoder = require('string_decoder').StringDecoder;
  const decoder = new StringDecoder('utf8');
 
+var mqtt = require('mqtt')
+, client = mqtt.connect();
+client.subscribe('iot-2/evt/status/fmt/json');
+
+var start = new Date();
+//console.log(start.getMilliseconds());
+client.on('message', function(topic, payload) {
+	var RTT = new Date() - start;
+
+	start = new Date();
+	console.info("Execution time: %dms", RTT);
+	m_payload = decoder.write(payload);
+	//client.end();
+	console.log(m_payload);
+	//  populate database
+      //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
+      var string = "";
+      string =String(m_payload);
+      string = string.split(",");
+      var MessageID = string[0];
+      var UpTime = string[1];
+      var ClockTime = string[2];
+      var Temperature = string[3];
+      var Battery = string[4];
+      var PowTrace = string[5];
+      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
+
+      io.sockets.emit('wsn-data', {"data": m_payload});
+
+});
+
+
+/*
 // MQTT Client
 var mqtt = require('mqtt')
 , m_client = mqtt.connect();
@@ -181,7 +216,7 @@ m_client.on('message', function(topic, m_data) {
 
       m_battery = string[4];
       if(string[4].indexOf("RSSI (dBm)") > -1){
-      	m_battery = "0.5";
+      	m_battery = "0000";
       }
       connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
       	if (err) throw err;
@@ -261,4 +296,5 @@ request('http://['+http_mote_url+']', function (error, response, h_payload) {
 io.sockets.emit('wsn-data', {"data": ''+h_uptime+','+m_battery+','+c_battery+','+h_battery+''}); // emit data to view/browser when response is arrived
 console.log(''+h_uptime+','+m_battery+','+c_battery+','+h_battery+'');
 };
+
 */

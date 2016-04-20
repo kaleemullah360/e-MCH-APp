@@ -7,12 +7,20 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     label IPV6 Address:
     input#mote-url(type='text', value='aaaa::c30c:0:0:2')
     label No of Packets:
-    input#mote-index(type='number', value='100')
+    input#mote-index(type='number', value='1')
     label Request Interval (milliseconds):
     input#mote-interval(type='number', value='1000')
     button(autofocus='', type='button', onclick='javascript: get_values()') Start
     hr
     ol#show-temp
+  script(src='js/socket.io.js')
+  script.
+    var counter = 0;
+    var socket = io();
+    socket.on('wsn-data', function(payload){
+    console.log(payload.data);
+    $('#show-temp').append('<li><span>' + payload.data + '</span></li>');
+    });
   script(type='text/javascript').
     function get_values() {
     var index = 1;
@@ -28,7 +36,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     cache: false,
     url: url,
     success: function(data) {
-    $('#show-temp').append('<li><span>' + data + '</span></li>');
     },
     error: function(data) {
     }
