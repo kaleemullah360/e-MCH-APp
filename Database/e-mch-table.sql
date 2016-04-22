@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50628
 File Encoding         : 65001
 
-Date: 2016-04-18 12:23:38
+Date: 2016-04-20 13:15:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,15 +20,15 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `e-mch-table`;
 CREATE TABLE `e-mch-table` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `MessageID` int(50) DEFAULT NULL,
-  `UpTime` int(50) DEFAULT NULL,
-  `ClockTime` varchar(50) DEFAULT NULL,
-  `Temperature` varchar(20) DEFAULT NULL,
-  `Battery` varchar(20) DEFAULT NULL,
-  `Protocol` varchar(20) DEFAULT NULL,
-  `RTT` varchar(20) DEFAULT NULL,
+  `id` int(100) NOT NULL AUTO_INCREMENT,
+  `MessageID` int(100) DEFAULT NULL,
+  `UpTime` int(100) DEFAULT NULL,
+  `ClockTime` varchar(100) DEFAULT NULL,
+  `Temperature` varchar(100) DEFAULT NULL,
+  `Battery` varchar(100) DEFAULT NULL,
+  `Protocol` varchar(100) DEFAULT NULL,
+  `RTT` varchar(100) DEFAULT NULL,
   `PowTrace` text CHARACTER SET utf8,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=398 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3398 DEFAULT CHARSET=latin1 COMMENT='SELECT * FROM `e-mch-table` WHERE Protocol= ''CoAP_1Sec_1Hop'';';
