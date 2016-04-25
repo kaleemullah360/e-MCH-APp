@@ -107,7 +107,7 @@ io.on('connection', function(socket){
  * Event listener for MQTT CoAP & HTTP Protocol.
  */
 
-
+// only for MQTT
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
