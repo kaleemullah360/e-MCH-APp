@@ -21,8 +21,8 @@ var coap        = require('coap')
 router.get('/', function(req, res, next) {
 	var mote_uri = req.query.uri;
 	var start = new Date();
-	var req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
-	req.on('response', function(c_res) {
+	var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
+	c_req.on('response', function(c_res) {
 		var RTT = new Date() - start;
 		//console.info("Execution time: %dms", RTT);
 		c_payload = decoder.write(c_res.payload);
@@ -43,7 +43,7 @@ router.get('/', function(req, res, next) {
 
 		res.send(decoder.write(c_payload));
 	})
-	req.end()
+	c_req.end()
 });
 
 module.exports = router;
