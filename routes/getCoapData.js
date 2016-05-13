@@ -3,7 +3,7 @@ var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
-var Protocol = "CoAP_0.5Sec_3Hop";
+var Protocol = "CoAP_10Sec_2Hop";
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({

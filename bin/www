@@ -177,7 +177,7 @@ var mqtt_mote_url = 'aaaa::c30c:0:0:a';
 // cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-emch.pow.upload nodeid=10 nodemac=10
 
 var coap_mote_url = 'aaaa::c30c:0:0:b';	
-// cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.upload nodeid=11 nodemac=11
+// cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.pow.upload nodeid=11 nodemac=11
 
 var http_mote_url = 'aaaa::c30c:0:0:c';	
 // cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-emch.pow.upload nodeid=12 nodemac=12
