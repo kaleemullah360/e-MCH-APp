@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
 	if (error && response.statusCode != 200) {
 	request_counter = request_counter + 1;
     console.log("################### " + request_counter + " ###################\n");
-    console.log(c_res);
+    console.log(error);
     console.log("######################################\n");
     return;
 	}

@@ -51,10 +51,10 @@ router.get('/', function(req, res, next) {
 	      	if (err) throw err;
 	      });
 
-	client.on('error', function(c_res) {
+	client.on('error', function(error) {
 	request_counter = request_counter + 1;
     console.log("################### " + request_counter + " ###################\n");
-    console.log(c_res);
+    console.log(error);
     console.log("######################################\n");
     return;
 	})
