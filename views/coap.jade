@@ -4,13 +4,19 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
   title CoAP Protocol Evaluation
   body
     h3 CoAP Protocol Evaluation | Multi Hop
-    label IPV6 Address:
-    input#mote-url(type='text', value='aaaa::c30c:0:0:2')
-    label No of Packets:
-    input#mote-index(type='number', value='100')
-    label Request Interval (milliseconds):
-    input#mote-interval(type='number', value='1000')
-    button(autofocus='', type='button', onclick='javascript: get_values()') Start
+    div.input-section(style="")
+      label IPV6 Address:
+      input#mote-url(style="width: 110px;", type='text', value='aaaa::c30c:0:0:2')
+      &nbsp | 
+      label No of Packets:
+      input#mote-index(style="width: 70px;", type='number', value='100')
+      &nbsp | 
+      label Request Interval (milliseconds):
+      input#mote-interval(style="width: 50px;", type='number', value='1000')
+      &nbsp | 
+      label Hop Count:
+      input#n-hops(style="width: 30px;", type='text', value='1')
+      button(style="float: right;", autofocus='', type='button', onclick='javascript: get_values()') Start
     hr
     ol#show-temp
   script(type='text/javascript').
@@ -18,8 +24,19 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     var index = 1;
     var ip = document.getElementById('mote-url').value;
     var limit = document.getElementById('mote-index').value;
-    var miliseconds = document.getElementById('mote-interval').value;
-    var url = 'http://localhost:3000/getCoapData?uri=' + ip;
+    var milliseconds = document.getElementById('mote-interval').value;
+    // MQTT_0.5Sec_3Hop
+    if (milliseconds == '500'){
+        duration_sec = '0.5';
+    }else if(milliseconds == '1000'){
+        duration_sec = '1';
+    }else if(milliseconds == '10000'){
+        duration_sec = '10';
+    }else{
+        duration_sec = 'x';
+    }
+    var n_hops = document.getElementById('n-hops').value;
+    var url = 'http://localhost:3000/getCoapData?uri=' + ip + '&d=' + duration_sec + '&h=' + n_hops;
     window.setInterval(function () {
     if (index <= limit) {
     $(function () {
@@ -39,5 +56,5 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     }
     console.log("MSGiD" + index);
     index++;
-    }, miliseconds);
+    }, milliseconds);
     }

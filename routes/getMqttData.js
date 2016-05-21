@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:4';
+var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
 m_payload = "";
-var Protocol = "MQTT_10Sec_1Hop";
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost', // default
   user     : 'root',  // default
   password : '',  // default
-  database : 'e-mch' // app database name
+  database : 'e-mch-db' // app database name
 });
 connection.connect();
 /*
@@ -23,6 +23,10 @@ client.subscribe('iot-2/evt/status/fmt/json');
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
 	var mote_uri = req.query.uri;
+	var duration_sec = req.query.d;
+	var n_hops = req.query.h;
+    // MQTT_0.5Sec_3Hop
+	var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 	var start = new Date();
 	/*
 	client.on('message', function(topic, payload) {
@@ -43,9 +47,17 @@ router.get('/', function(req, res, next) {
 	      var Temperature = string[3];
 	      var Battery = string[4];
 	      var PowTrace = string[5];
-	      /*connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+	      /*connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
 	      	if (err) throw err;
 	      });
+
+	client.on('error', function(c_res) {
+	request_counter = request_counter + 1;
+    console.log("################### " + request_counter + " ###################\n");
+    console.log(c_res);
+    console.log("######################################\n");
+    return;
+	})
 
 	}); */
 res.send(m_payload);

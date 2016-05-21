@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 
+/*
+MQTT:
+cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-emch.pow.upload nodeid=10 nodemac=10
+
+CoAP:
+cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.pow.upload nodeid=2 nodemac=2
+
+HTTP:
+cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-emch.pow.upload nodeid=3 nodemac=3
+
+Border Router:
+cd ~/kontiki/examples/ipv6/rpl-border-router/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-border-router.upload nodeid=1 nodemac=1
+
+Hop for CoAP, MQTT
+cd ~/kontiki/examples/ipv6/rpl-collect/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-hop-udp-sender.upload
+
+PowerTrace
+cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make example-powertrace.upload
+
+*/
+
 /**
  * Module dependencies.
  */
@@ -114,10 +135,14 @@ var connection = mysql.createConnection({
   host     : 'localhost', // default
   user     : 'root',  // default
   password : '',  // default
-  database : 'e-mch' // app database name
+  database : 'e-mch-db' // app database name
 });
 connection.connect();
-var Protocol = "MQTT_10Sec_3Hop";
+var request_counter = 1;
+	var duration_sec = '1';	// seconds i.e 0.5
+	var n_hops = '1'; // Hop counts i.e 3
+    // MQTT_0.5Sec_3Hop
+	var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
  // initialize required libs
  const StringDecoder = require('string_decoder').StringDecoder;
  const decoder = new StringDecoder('utf8');
@@ -147,12 +172,19 @@ client.on('message', function(topic, payload) {
       var Temperature = string[3];
       var Battery = string[4];
       var PowTrace = string[5];
-      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
+      connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
 
       io.sockets.emit('wsn-data', {"data": m_payload});
 
 });
 
+  client.on('error', function(c_res) {
+  request_counter = request_counter + 1;
+    console.log("################### " + request_counter + " ###################\n");
+    console.log(c_res);
+    console.log("######################################\n");
+    return;
+  })
 
 /*
 // MQTT Client
@@ -174,20 +206,8 @@ var http_mote_url = 'aaaa::c30c:0:0:3';
 
 if (real_experiments){	// true
 var mqtt_mote_url = 'aaaa::c30c:0:0:a';
-// cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-emch.pow.upload nodeid=10 nodemac=10
-
-var coap_mote_url = 'aaaa::c30c:0:0:b';	
-// cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.pow.upload nodeid=11 nodemac=11
-
-var http_mote_url = 'aaaa::c30c:0:0:c';	
-// cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-emch.pow.upload nodeid=12 nodemac=12
-
-// cd ~/kontiki/examples/ipv6/rpl-border-router/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-border-router.upload nodeid=1 nodemac=1
-
-// cd ~/kontiki/examples/ipv6/rpl-collect/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-hop-udp-sender.upload
-
-// cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make example-powertrace.upload
-
+var coap_mote_url = 'aaaa::c30c:0:0:b';
+var http_mote_url = 'aaaa::c30c:0:0:c';
 }
 
 var c_data = "";
@@ -218,7 +238,7 @@ m_client.on('message', function(topic, m_data) {
       if(string[4].indexOf("RSSI (dBm)") > -1){
       	m_battery = "0000";
       }
-      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
+      connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
       	if (err) throw err;
       });
 //	<---- End MQTT: Prepare Data for Battery ---------->
@@ -253,7 +273,7 @@ c_req.on('response', function(c_res) {
 	      var Protocol = "CoAP";
 
 	      c_battery = string[4];
-	      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
+	      connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
 	      	if (err) throw err;
 	      });
 	//	<---- End CoAP: Prepare Data for Battery ---------->
@@ -286,7 +306,7 @@ request('http://['+http_mote_url+']', function (error, response, h_payload) {
       h_battery = string[4];
       h_uptime = string[1];
 
-      connection.query('INSERT INTO `e-mch-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
+      connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\')', function(err, rows, fields) {
       	if (err) throw err;
       });
 //	<---- End HTTP: Prepare Data for Battery ---------->
