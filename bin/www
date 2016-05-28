@@ -2,13 +2,13 @@
 
 /*
 MQTT:
-cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-emch.pow.upload nodeid=10 nodemac=10
+cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-emch.rtt.upload nodeid=10 nodemac=10
 
 CoAP:
-cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.pow.upload nodeid=2 nodemac=2
+cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-emch.rtt.upload nodeid=2 nodemac=2
 
 HTTP:
-cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-emch.pow.upload nodeid=3 nodemac=3
+cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-emch.rtt.upload nodeid=3 nodemac=3
 
 Border Router:
 cd ~/kontiki/examples/ipv6/rpl-border-router/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-border-router.upload nodeid=1 nodemac=1
@@ -138,6 +138,14 @@ var connection = mysql.createConnection({
   database : 'e-mch-db' // app database name
 });
 connection.connect();
+
+var MessageID   = "nil";
+var UpTime      = "nil";
+var ClockTime   = "nil";
+var Temperature = "nil";
+var Battery     = "nil";
+var PowTrace    = "nil";
+
 var request_counter = 1;
 	var duration_sec = '1';	// seconds i.e 0.5
 	var n_hops = '1'; // Hop counts i.e 3
@@ -166,12 +174,12 @@ client.on('message', function(topic, payload) {
       var string = "";
       string =String(m_payload);
       string = string.split(",");
-      var MessageID = string[0];
-      var UpTime = string[1];
-      var ClockTime = string[2];
-      var Temperature = string[3];
-      var Battery = string[4];
-      var PowTrace = string[5];
+      MessageID   = (string[0]) ? string[0] : '0' ;
+      UpTime      = (string[1]) ? string[1] : '0' ;
+      ClockTime   = (string[2]) ? string[2] : '0' ;
+      Temperature = (string[3]) ? string[3] : '0' ;
+      Battery     = (string[4]) ? string[4] : '0' ;
+      PowTrace    = (string[5]) ? string[5] : '0' ;
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
 
       io.sockets.emit('wsn-data', {"data": m_payload});

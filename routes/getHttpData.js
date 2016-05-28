@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:3';
+
+var MessageID   = "nil";
+var UpTime      = "nil";
+var ClockTime   = "nil";
+var Temperature = "nil";
+var Battery     = "nil";
+var PowTrace    = "nil";
+
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
@@ -27,7 +35,7 @@ router.get('/', function(req, res, next) {
 	var start = new Date();
 	request('http://['+mote_uri+']', function (error, response, payload) {
 
-	if (error && response.statusCode != 200) {
+	if (error) {
 	request_counter = request_counter + 1;
     console.log("################### " + request_counter + " ###################\n");
     console.log(error);
@@ -35,7 +43,7 @@ router.get('/', function(req, res, next) {
     return;
 	}
 
-	if (!error && response.statusCode == 200) {
+	if (payload) {
 	var RTT = new Date() - start;
 	//console.info("Execution time: %dms", RTT);
 		h_payload = decoder.write(payload);
@@ -44,18 +52,18 @@ router.get('/', function(req, res, next) {
       var string = "";
       string =String(h_payload);
       string = string.split(",");
-      var MessageID = string[0];
-      var UpTime = string[1];
-      var ClockTime = string[2];
-      var Temperature = string[3];
-      var Battery = string[4];
-      var PowTrace = string[5];
+      MessageID   = (string[0]) ? string[0] : '0' ;
+      UpTime      = (string[1]) ? string[1] : '0' ;
+      ClockTime   = (string[2]) ? string[2] : '0' ;
+      Temperature = (string[3]) ? string[3] : '0' ;
+      Battery     = (string[4]) ? string[4] : '0' ;
+      PowTrace    = (string[5]) ? string[5] : '0' ;
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
       	if (err) throw err;
       });
 
 		res.send(h_payload);
-	}
+	}else{return}
 	})
 
 });

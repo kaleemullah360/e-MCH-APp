@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
+
+var MessageID   = "nil";
+var UpTime      = "nil";
+var ClockTime   = "nil";
+var Temperature = "nil";
+var Battery     = "nil";
+var PowTrace    = "nil";
+
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
@@ -29,24 +37,25 @@ router.get('/', function(req, res, next) {
 	c_req.on('response', function(c_res) {
 		var RTT = new Date() - start;
 		//console.info("Execution time: %dms", RTT);
-		if (!c_res.payload) return;
+		if (c_res.payload.length < 5) return;
 		c_payload = decoder.write(c_res.payload);
+		//console.log(c_res.payload);
 		//  populate database
 	      //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
 	      var string = "";
-	      string =String(c_payload);
-	      string = string.split(",");
-	      var MessageID = string[0];
-	      var UpTime = string[1];
-	      var ClockTime = string[2];
-	      var Temperature = string[3];
-	      var Battery = string[4];
-	      var PowTrace = string[5];
-	      connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
-	      	if (err) throw err;
-	      });
+	    string =String(c_payload);
+	    string = string.split(",");
+		MessageID   = (string[0]) ? string[0] : '0' ;
+		UpTime      = (string[1]) ? string[1] : '0' ;
+		ClockTime   = (string[2]) ? string[2] : '0' ;
+		Temperature = (string[3]) ? string[3] : '0' ;
+		Battery     = (string[4]) ? string[4] : '0' ;
+		PowTrace    = (string[5]) ? string[5] : '0' ;
+	    connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+	      if (err) throw err;
+	    });
 
-		res.send(decoder.write(c_payload));
+		res.send(c_payload);
 	})
 	c_req.on('error', function(c_res) {
 	request_counter = request_counter + 1;
