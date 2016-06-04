@@ -164,8 +164,7 @@ var start = new Date();
 client.on('message', function(topic, payload) {
 	var RTT = new Date() - start;
 
-	start = new Date();
-	console.info("Execution time: %dms", RTT);
+	console.info("RTT MQTT: %dms", RTT);
 	m_payload = decoder.write(payload);
 	//client.end();
 	console.log(m_payload);
