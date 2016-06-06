@@ -54,13 +54,13 @@ router.get('/', function(req, res, next) {
   /*-------------------- get Round Trip Time ---------------------*/
   session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
     RTT = rcvd - sent;
-    console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
+    //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
     if(!rtt_error){
       /*-------------------- get Payload ---------------------*/
         // MQTT_0.5Sec_3Hop
         var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-        client.subscribe('iot-2/evt/status/fmt/json', function(){console.log("Event: subscribed on topic");});
+        client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
         
         client.on('message', function(topic, payload) {
           m_payload = decoder.write(payload);
@@ -79,7 +79,6 @@ router.get('/', function(req, res, next) {
               connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
                 if (err) throw err;
               });
-              console.log("prv: " + PrevMessageID + "\n");
               PrevMessageID = MessageID;
             }
             client.on('error', function(error) {
