@@ -1,4 +1,5 @@
 var express = require('express');
+var ping = require ("net-ping");
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:3';
 
@@ -8,6 +9,24 @@ var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
+var RTT         = "nil";
+
+/*-------------------- PING Lib Configs ---------------------*/
+// Default options
+var options = {
+  networkProtocol: ping.NetworkProtocol.IPv6,
+  packetSize: 64,
+  retries: 1,
+  sessionId: (process.pid % 65535),
+  timeout: 10000,
+  ttl: 128
+};
+var session = ping.createSession (options);
+
+session.on ("error", function (error) {
+  console.trace (error.toString ());
+});
+/*-------------------- End PING Lib Configs ------------------*/
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
@@ -30,23 +49,28 @@ router.get('/', function(req, res, next) {
 	var mote_uri = req.query.uri;
 	var duration_sec = req.query.d;
 	var n_hops = req.query.h;
-    // MQTT_0.5Sec_3Hop
-	var Protocol = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-	var start = new Date();
-	request('http://['+mote_uri+']', function (error, response, payload) {
 
-	if (error) {
-	request_counter = request_counter + 1;
-    console.log("################### " + request_counter + " ###################\n");
-    console.log(error);
-    console.log("######################################\n");
-    return;
-	}
+  /*-------------------- get Round Trip Time ---------------------*/
+  session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
+    RTT = rcvd - sent;
+    //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
-	if (payload) {
-	var RTT = new Date() - start;
-	//console.info("Execution time: %dms", RTT);
-		h_payload = decoder.write(payload);
+    if(!rtt_error){
+      /*-------------------- get Payload ---------------------*/
+    // HTTP_0.5Sec_3Hop
+    var Protocol = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+    request('http://['+mote_uri+']', function (request_error, response, payload) {
+
+     if (request_error) {
+       request_counter = request_counter + 1;
+       console.log("[===============< " + request_counter + " >===============]\n");
+       console.log(request_error);
+       console.log("[==================================]\n");
+       return;
+     }
+
+     if (payload) {
+      h_payload = decoder.write(payload);
 				//  populate database
       //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
       var string = "";
@@ -62,10 +86,19 @@ router.get('/', function(req, res, next) {
       	if (err) throw err;
       });
 
-		res.send(h_payload);
-	}else{return}
-	})
+      res.send(h_payload + "," + RTT);
 
+    }else{return}
+  })
+
+    /*-------------------- End get Payload ---------------------*/
+  }else{
+    console.log("HTTP: Ping failed, Device is not reachable, Trying again ... \n");
+  return; // No RTT
+}
+
+});
+  /*-------------------- End get Round Trip Time ---------------------*/
 });
 
 module.exports = router;
