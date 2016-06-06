@@ -1,15 +1,15 @@
 doctype strict
 html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
   script(type='text/javascript', src='js/jquery-2.2.0.min.js')
-  title MQTT Protocol Evaluation
+  title MQTT Protocol Evaluation.
   body
-    h3 MQTT Protocol Evaluation | Multi Hop
+    h3 MQTT Protocol Evaluation Socket based polling | Multi Hop
     div.input-section(style="")
       label IPV6 Address:
-      input#mote-url(style="width: 110px;", type='text', value='aaaa::c30c:0:0:4')
+      input#mote-url(style="width: 110px;", type='text', value='aaaa::c30c:0:0:2')
       &nbsp | 
       label No of Packets:
-      input#mote-index(style="width: 70px;", type='number', value='100')
+      input#mote-index(style="width: 70px;", type='number', value='1')
       &nbsp | 
       label Request Interval (milliseconds):
       input#mote-interval(style="width: 50px;", type='number', value='1000')
@@ -19,9 +19,16 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
       button(style="float: right;", autofocus='', type='button', onclick='javascript: get_values()') Start
     hr
     ol#show-temp
+  script(src='js/socket.io.js')
+  script.
+    var counter = 0;
+    var socket = io();
+    socket.on('wsn-data', function(payload){
+    console.log(payload.data);
+    $('#show-temp').append('<li><span>' + payload.data + '</span></li>');
+    });
   script(type='text/javascript').
     function get_values() {
-    var PrevMessageID = 'nil';
     var index = 1;
     var ip = document.getElementById('mote-url').value;
     var limit = document.getElementById('mote-index').value;
@@ -46,15 +53,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     cache: false,
     url: url,
     success: function(data) {
-    var string = "";
-    string =String(data);
-    string = string.split(",");
-    MessageID   = (string[0]) ? string[0] : '0' ;
-    if(MessageID != PrevMessageID){
-    $('#show-temp').append('<li><span>' + data + '</span></li>');
-    PrevMessageID = MessageID;
-    index++;
-    }
     },
     error: function(data) {
     }
@@ -64,5 +62,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     return;
     }
     console.log("MSGiD" + index);
+    index++;
     }, milliseconds);
     }

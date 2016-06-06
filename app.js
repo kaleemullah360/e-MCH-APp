@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var mqtt = require('./routes/mqtt');
+var mqtt_soc = require('./routes/mqtt-socket');
 var coap = require('./routes/coap');
 var http = require('./routes/http');
 
@@ -34,6 +35,7 @@ app.use('/', routes);
 app.use('/users', users);
 
 app.use('/mqtt', mqtt);
+app.use('/mqtt-sock', mqtt_soc);
 app.use('/coap', coap);
 app.use('/http', http);
 
