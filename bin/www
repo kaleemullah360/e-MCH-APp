@@ -21,7 +21,7 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
 
 */
 
-var enable_socket = false;
+var enable_socket = true;
 console.log("MQTT Socket Status: " + enable_socket + "\n");
 /**
  * Module dependencies.
@@ -166,7 +166,7 @@ session.on ("error", function (error) {
 /*-------------------- End PING Lib Configs ------------------*/
 
 var request_counter = 1;
-var mote_uri = 'aaaa::c30c:0:0:2';
+var mote_uri = 'aaaa::c30c:0:0:4';
 var duration_sec = '1';	// seconds i.e 0.5
 var n_hops = '1'; // Hop counts i.e 3
 // MQTT_0.5Sec_3Hop
@@ -199,8 +199,9 @@ client.on('message', function(topic, payload) {
       Temperature = (string[3]) ? string[3] : '0' ;
       Battery     = (string[4]) ? string[4] : '0' ;
       PowTrace    = (string[5]) ? string[5] : '0' ;
+    /*  
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
-
+	*/
       io.sockets.emit('wsn-data', {"data": m_payload + "," + RTT});
       /*-------------------- End get Payload ---------------------*/
   }else{
