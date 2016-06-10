@@ -21,7 +21,7 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
 
 */
 
-var enable_socket = true;
+var enable_socket = false;
 console.log("MQTT Socket Status: " + enable_socket + "\n");
 /**
  * Module dependencies.
