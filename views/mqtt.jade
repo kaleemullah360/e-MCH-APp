@@ -18,7 +18,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
       input#n-hops(style="width: 30px;", type='text', value='1')
       button(style="float: right;", autofocus='', type='button', onclick='javascript: get_values()') Start
     hr
-    ol#show-temp
+    ol#show-temp('reversed')
   script(type='text/javascript').
     function get_values() {
     var PrevMessageID = 'nil';
@@ -51,7 +51,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     string = string.split(",");
     MessageID   = (string[0]) ? string[0] : '0' ;
     if(MessageID != PrevMessageID){
-    $('#show-temp').append('<li><span>' + data + '</span></li>');
+    $('#show-temp').prepend('<li><span>' + data + '</span></li>');
     PrevMessageID = MessageID;
     index++;
     }

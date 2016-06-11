@@ -18,14 +18,14 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
       input#n-hops(style="width: 30px;", type='text', value='1')
       button(style="float: right;", autofocus='', type='button', disabled, onclick='javascript: get_values()') Start
     hr
-    ol#show-temp
+    ol#show-temp('reversed')
   script(src='js/socket.io.js')
   script.
     var counter = 0;
     var socket = io();
     socket.on('wsn-data', function(payload){
     console.log(payload.data);
-    $('#show-temp').append('<li><span>' + payload.data + '</span></li>');
+    $('#show-temp').prepend('<li><span>' + payload.data + '</span></li>');
     });
   script(type='text/javascript').
     function get_values() {
