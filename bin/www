@@ -199,9 +199,9 @@ client.on('message', function(topic, payload) {
       Temperature = (string[3]) ? string[3] : '0' ;
       Battery     = (string[4]) ? string[4] : '0' ;
       PowTrace    = (string[5]) ? string[5] : '0' ;
-    /*  
+     
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
-	*/
+	
       io.sockets.emit('wsn-data', {"data": m_payload + "," + RTT});
       /*-------------------- End get Payload ---------------------*/
   }else{
