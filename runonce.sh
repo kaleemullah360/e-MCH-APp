@@ -12,8 +12,15 @@
 ################################################################################
 
 # Download & Setup Node Js 6
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
+read -p "Want me to setup Node-Js? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+	sudo apt-get install -y nodejs
+	echo "Node Js Succefully Installed."
+    #exit 1
+fi
 
 # Install coap library
 npm install coap --save

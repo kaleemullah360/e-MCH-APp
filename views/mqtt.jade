@@ -38,6 +38,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     }
     var n_hops = document.getElementById('n-hops').value;
     var url = 'http://localhost:3000/getMqttData?uri=' + ip + '&d=' + duration_sec + '&h=' + n_hops;
+    document.title = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
     window.setInterval(function () {
     if (index <= limit) {
     $(function () {
