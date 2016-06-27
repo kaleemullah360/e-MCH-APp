@@ -2,13 +2,14 @@ var express = require('express');
 var ping = require ("net-ping");
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
+
 var MessageID   = "nil";
 var UpTime      = "nil";
 var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT			    = "nil";
+var RTT         = "nil";
 
 /*-------------------- PING Lib Configs ---------------------*/
 // Default options
