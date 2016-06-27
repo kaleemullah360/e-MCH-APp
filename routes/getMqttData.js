@@ -11,6 +11,7 @@ var Battery       	= "nil";
 var PowTrace      	= "nil";
 var RTT				= "nil";
 var PrevMessageID 	= "nil";
+
 /*-------------------- PING Lib Configs ---------------------*/
 // Default options
 var options = {
