@@ -16,7 +16,7 @@ version 2.1.0
 
 [rickshaw](https://www.npmjs.com/package/rickshaw)
 
-[net-ping]()
+[net-ping](https://www.npmjs.com/package/net-ping)
 
 ### Description:
 
