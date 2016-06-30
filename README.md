@@ -18,6 +18,8 @@ version 2.1.0
 
 [net-ping](https://www.npmjs.com/package/net-ping)
 
+[request](https://www.npmjs.com/package/request)
+
 ### Description:
 
 e-MCH-APp | Evaluation. The realtime graph plots for MQTT (Message Queuing Telemetry Transport), CoAP (Constrained Application Protocol), HTTP (Hyper Text Transfer Protocol)
