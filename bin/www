@@ -26,6 +26,7 @@ cd ~/kontiki/examples/rime/ && sudo make clean && sudo make TARGET=z1 savetarget
 
 var enable_socket = false;
 console.log("MQTT Socket Status: " + enable_socket + "\n");
+
 /**
  * Module dependencies.
  */
