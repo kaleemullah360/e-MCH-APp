@@ -71,7 +71,7 @@ router.get('/', function(req, res, next) {
             string =String(m_payload);
             string = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
-            if(MessageID != PrevMessageID){
+            if(MessageID != PrevMessageID){	// savd this record only if its new request
               UpTime      = (string[1]) ? string[1] : '0' ;
               ClockTime   = (string[2]) ? string[2] : '0' ;
               Temperature = (string[3]) ? string[3] : '0' ;
