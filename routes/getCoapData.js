@@ -14,18 +14,18 @@ var RTT         = "nil";
 /*-------------------- PING Lib Configs ---------------------*/
 // Default options
 var options = {
-networkProtocol: ping.NetworkProtocol.IPv6,
-                 packetSize: 64,
-                 retries: 1,
-                 sessionId: (process.pid % 65535),
-                 timeout: 10000,
-                 ttl: 128
+    networkProtocol: ping.NetworkProtocol.IPv6,
+    packetSize: 64,
+    retries: 1,
+    sessionId: (process.pid % 65535),
+    timeout: 10000,
+    ttl: 128
 };
 var session = ping.createSession (options);
 
 session.on ("error", function (error) {
     console.trace (error.toString ());
-    });
+});
 /*-------------------- End PING Lib Configs ------------------*/
 
 var request_counter = 1;
@@ -56,14 +56,14 @@ router.get('/', function(req, res, next) {
         //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
         if(!rtt_error){
-        /*-------------------- get Payload ---------------------*/
+            /*-------------------- get Payload ---------------------*/
         // CoAP_0.5Sec_3Hop
         var Protocol = 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
         var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
         c_req.on('response', function(c_res) {
             //console.info("RTT: %dms", RTT);
             if (!c_res.payload){
-            return;	
+                return;	
             }
             c_payload = decoder.write(c_res.payload);
             //  populate database
@@ -78,27 +78,27 @@ router.get('/', function(req, res, next) {
             Battery     = (string[4]) ? string[4] : '0' ;
             PowTrace    = (string[5]) ? string[5] : '0' ;
             connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
-                  if (err) throw err;
-                  });
+              if (err) throw err;
+          });
 
-                res.send(c_payload + "," + RTT);
-                })
-            c_req.on('error', function(c_res) {
-                request_counter = request_counter + 1;
-                console.log("[===============< " + request_counter + " >===============]\n");
-                console.log(c_res);
-                console.log("[==================================]\n");
-                return;
-                })
-            c_req.end()
+            res.send(c_payload + "," + RTT);
+        })
+        c_req.on('error', function(c_res) {
+            request_counter = request_counter + 1;
+            console.log("[===============< " + request_counter + " >===============]\n");
+            console.log(c_res);
+            console.log("[==================================]\n");
+            return;
+        })
+        c_req.end()
 
-              /*-------------------- End get Payload ---------------------*/
-        }else{
-          console.log("CoAP: Ping failed, Device is not reachable, Trying again ... \n");
+        /*-------------------- End get Payload ---------------------*/
+    }else{
+      console.log("CoAP: Ping failed, Device is not reachable, Trying again ... \n");
           return;	// No RTT
-        }
+      }
 
-    });
+  });
     /*-------------------- End get Round Trip Time ---------------------*/
 });
 
