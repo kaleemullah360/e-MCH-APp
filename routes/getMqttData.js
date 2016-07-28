@@ -3,6 +3,7 @@ var ping = require ("net-ping");
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:4';
 
+// variables
 var MessageID     	= "nil";
 var UpTime        	= "nil";
 var ClockTime     	= "nil";
