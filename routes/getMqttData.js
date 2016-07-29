@@ -43,7 +43,7 @@ password : '',  // default
 database : 'e-mch-db' // app database name
 });
 connection.connect();
-
+// require mqtt library
 var mqtt = require('mqtt')
 , client = mqtt.connect();
 //console.log(client);
