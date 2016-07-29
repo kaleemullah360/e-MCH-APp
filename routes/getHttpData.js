@@ -42,6 +42,7 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
+// for making reuest
 var request = require('request');
 
 /* GET HTTP Data. */
