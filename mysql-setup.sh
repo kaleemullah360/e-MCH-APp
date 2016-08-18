@@ -1,7 +1,8 @@
 #! /bin/sh
 ################################################################################
 # 1. This script remove Mysql v 5.7 along with all dependacies.                #
-# 2. Install & setup Mysql server                                              #
+# 2. Install & setup Mysql server 											   #	
+# 3. The script also change password for MySql server and set Abcd1234         #
 #                                                                              #
 # Warning:                                                                     #
 #  Run this script once only. running it again will re-install/update existing #
