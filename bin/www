@@ -42,6 +42,7 @@ console.log("MQTT Socket Status: " + enable_socket + "\n");
  * Get port from environment and store in Express.
  */
 
+ console.log("Found port: " + process.env.PORT);
  var port = normalizePort(process.env.PORT || '3000');
  app.set('port', port);
 
