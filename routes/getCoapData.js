@@ -57,9 +57,9 @@ router.get('/', function(req, res, next) {
             c_payload = decoder.write(c_res.payload);
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-            var string = "";
-            string =String(c_payload);
-            string = string.split(",");
+            var string  = "";
+            string      = String(c_payload);
+            string      = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
             UpTime      = (string[1]) ? string[1] : '0' ;
             ClockTime   = (string[2]) ? string[2] : '0' ;
