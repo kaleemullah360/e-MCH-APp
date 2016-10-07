@@ -154,7 +154,7 @@ var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT			= "nil";
+var RTT			    = "nil";
 
 /*-------------------- PING Lib Configs ---------------------*/
 // Default options
