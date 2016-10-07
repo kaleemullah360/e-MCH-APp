@@ -1,8 +1,8 @@
-var express     = require('express');
-var ping        = require ("net-ping");
+var express = require('express');
+var ping = require ("net-ping");
+var router = express.Router();
 var connection  = require('../config/dbcon');
-var router      = express.Router();
-var mote_uri    = 'aaaa::c30c:0:0:2';
+var mote_uri = 'aaaa::c30c:0:0:2';
 
 // variables
 var MessageID   = "nil";
@@ -29,6 +29,11 @@ session.on ("error", function (error) {
     console.trace (error.toString ());
 });
 /*-------------------- End PING Lib Configs ------------------*/
+
+var request_counter = 1;
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
+
 
 var coap        = require('coap')
 
@@ -57,9 +62,9 @@ router.get('/', function(req, res, next) {
             c_payload = decoder.write(c_res.payload);
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-            var string  = "";
-            string      = String(c_payload);
-            string      = string.split(",");
+            var string = "";
+            string =String(c_payload);
+            string = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
             UpTime      = (string[1]) ? string[1] : '0' ;
             ClockTime   = (string[2]) ? string[2] : '0' ;
