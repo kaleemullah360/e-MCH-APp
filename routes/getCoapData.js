@@ -1,8 +1,8 @@
-var express = require('express');
-var ping = require ("net-ping");
-var router = express.Router();
-var connection  = require('../config/dbcon');
-var mote_uri = 'aaaa::c30c:0:0:2';
+var express     = require('express');
+var ping        = require ("net-ping");
+var router      = express.Router();
+var connection  = require('../config/dbcon'); // path must be relative to file you're in
+var mote_uri    = 'aaaa::c30c:0:0:2';
 
 // variables
 var MessageID   = "nil";
@@ -32,17 +32,15 @@ session.on ("error", function (error) {
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
-
-
-var coap        = require('coap')
+const decoder       = new StringDecoder('utf8');
+var coap            = require('coap')
 
 /* GET CoAP Data. */
 //	http://localhost:3000/getCoapData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
-    var mote_uri = req.query.uri;
-    var duration_sec = req.query.d;
-    var n_hops = req.query.h;
+    var mote_uri    = req.query.uri;
+    var duration_sec= req.query.d;
+    var n_hops      = req.query.h;
 
     /*-------------------- get Round Trip Time ---------------------*/
     session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
@@ -52,19 +50,19 @@ router.get('/', function(req, res, next) {
         if(!rtt_error){
             /*-------------------- get Payload ---------------------*/
         // CoAP_0.5Sec_3Hop
-        var Protocol = 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-        var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
+        var Protocol    = 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+        var c_req       = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
         c_req.on('response', function(c_res) {
             //console.info("RTT: %dms", RTT);
             if (!c_res.payload){
                 return;	
             }
-            c_payload = decoder.write(c_res.payload);
+            c_payload   = decoder.write(c_res.payload);
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-            var string = "";
-            string =String(c_payload);
-            string = string.split(",");
+            var string  = "";
+            string      =String(c_payload);
+            string      = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
             UpTime      = (string[1]) ? string[1] : '0' ;
             ClockTime   = (string[2]) ? string[2] : '0' ;
