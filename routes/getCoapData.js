@@ -1,6 +1,6 @@
 var express = require('express');
 var ping = require ("net-ping");
-var db = require('./config/dbconnection');
+var connection = require('./config/dbconnection');
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
 
@@ -29,19 +29,6 @@ session.on ("error", function (error) {
     console.trace (error.toString ());
 });
 /*-------------------- End PING Lib Configs ------------------*/
-
-var request_counter = 1;
-const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
-// create MYSQL Server connection to store data
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-host     : 'localhost', // default
-user     : 'root',  // default
-password : '',  // default
-database : 'e-mch-db' // app database name
-});
-connection.connect();
 
 var coap        = require('coap')
 
