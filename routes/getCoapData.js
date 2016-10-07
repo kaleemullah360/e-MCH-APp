@@ -1,6 +1,6 @@
 var express     = require('express');
 var ping        = require ("net-ping");
-var connection  = require('./config/dbcon');
+var connection  = require('../config/dbcon');
 var router      = express.Router();
 var mote_uri    = 'aaaa::c30c:0:0:2';
 
