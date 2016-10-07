@@ -1,8 +1,8 @@
-var express = require('express');
-var ping = require ("net-ping");
-var connection = require('./config/dbconnection');
-var router = express.Router();
-var mote_uri = 'aaaa::c30c:0:0:2';
+var express     = require('express');
+var ping        = require ("net-ping");
+var connection  = require('./config/dbconnection');
+var router      = express.Router();
+var mote_uri    = 'aaaa::c30c:0:0:2';
 
 // variables
 var MessageID   = "nil";
