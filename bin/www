@@ -37,12 +37,12 @@ console.log("MQTT Socket Status: " + enable_socket + "\n");
  var app = require('../app');
  var debug = require('debug')('e-MCH-APp:server');
  var http = require('http');
+ var connection  = require('../config/dbcon'); // path must be relative to file you're in
 
 /**
  * Get port from environment and store in Express.
  */
 
- console.log("Found port: " + process.env.PORT);
  var port = normalizePort(process.env.PORT || '3000');
  app.set('port', port);
 
@@ -137,16 +137,6 @@ return false;
  * Event listener for Socket Based MQTT Protocol.
  */
  if(enable_socket == true){
-// create MYSQL Server connection to store data
-var ping = require ("net-ping");
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost', // default
-  user     : 'root',  // default
-  password : '',  // default
-  database : 'e-mch-db' // app database name
-});
-connection.connect();
 
 var MessageID   = "nil";
 var UpTime      = "nil";

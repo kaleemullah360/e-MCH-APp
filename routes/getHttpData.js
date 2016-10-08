@@ -1,5 +1,6 @@
 var express = require('express');
 var ping = require ("net-ping");
+var connection  = require('../config/dbcon'); // path must be relative to file you're in
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:3';
 
@@ -32,15 +33,6 @@ session.on ("error", function (error) {
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
-// create MYSQL Server connection to store data
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost', // default
-  user     : 'root',  // default
-  password : '',  // default
-  database : 'e-mch-db' // app database name
-});
-connection.connect();
 
 // for making reuest
 var request = require('request');

@@ -1,5 +1,6 @@
 var express = require('express');
 var ping = require ("net-ping");
+var connection  = require('../config/dbcon'); // path must be relative to file you're in
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:4';
 
@@ -34,15 +35,6 @@ var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
 m_payload = "";
-// create MYSQL Server connection to store data
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-host     : 'localhost', // default
-user     : 'root',  // default
-password : '',  // default
-database : 'e-mch-db' // app database name
-});
-connection.connect();
 // require mqtt library
 var mqtt = require('mqtt')
 , client = mqtt.connect();
