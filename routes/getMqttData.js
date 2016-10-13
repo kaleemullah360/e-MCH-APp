@@ -40,13 +40,13 @@ router.get('/', function(req, res, next) {
       client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
 
       client.on('message', function(topic, payload) {
-        m_payload = decoder.write(payload);
+        m_payload 				= decoder.write(payload);
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-            var string = "";
-            string =String(m_payload);
-            string = string.split(",");
-            MessageID   = (string[0]) ? string[0] : '0' ;
+            var string 		= "";
+            string 				=String(m_payload);
+            string 				= string.split(",");
+            MessageID   	= (string[0]) ? string[0] : '0' ;
             if(MessageID != PrevMsgID){	// savd this record only if its new request
               UpTime      = (string[1]) ? string[1] : '0' ;
               ClockTime   = (string[2]) ? string[2] : '0' ;
