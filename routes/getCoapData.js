@@ -13,7 +13,6 @@ var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT         = "nil";
 
-
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder       = new StringDecoder('utf8');
