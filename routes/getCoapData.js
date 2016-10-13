@@ -1,7 +1,7 @@
 var express     = require('express');
-var ping        = require ("net-ping");
+var session  = require('../config/ping'); // include ping configs && path must be relative to file you're in
+var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 var router      = express.Router();
-var connection  = require('../config/dbcon'); // path must be relative to file you're in
 var mote_uri    = 'aaaa::c30c:0:0:2';
 
 // variables
