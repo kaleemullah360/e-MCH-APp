@@ -5,14 +5,14 @@ var router 			= express.Router();
 var mote_uri 		= 'aaaa::c30c:0:0:4';
 
 // variables
-var MessageID     	= "nil";
-var UpTime        	= "nil";
-var ClockTime     	= "nil";
-var Temperature   	= "nil";
-var Battery       	= "nil";
-var PowTrace      	= "nil";
-var RTT             = "nil";
-var PrevMessageID 	= "nil";
+var MessageID   = "nil";
+var UpTime      = "nil";
+var ClockTime   = "nil";
+var Temperature = "nil";
+var Battery     = "nil";
+var PowTrace    = "nil";
+var RTT         = "nil";
+var PrevMsgID		= "nil";
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
@@ -47,7 +47,7 @@ router.get('/', function(req, res, next) {
             string =String(m_payload);
             string = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
-            if(MessageID != PrevMessageID){	// savd this record only if its new request
+            if(MessageID != PrevMsgID){	// savd this record only if its new request
               UpTime      = (string[1]) ? string[1] : '0' ;
               ClockTime   = (string[2]) ? string[2] : '0' ;
               Temperature = (string[3]) ? string[3] : '0' ;
@@ -56,7 +56,7 @@ router.get('/', function(req, res, next) {
               connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
                 if (err) throw err;
               });
-              PrevMessageID = MessageID;
+              PrevMsgID = MessageID;
             }
             client.on('error', function(error) {
               request_counter = request_counter + 1;
