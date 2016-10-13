@@ -15,17 +15,17 @@ var RTT         = "nil";
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
+const decoder 			= new StringDecoder('utf8');
 
 // for making reuest
-var request = require('request');
+var request 				= require('request');
 
 /* GET HTTP Data. */
 //	http://localhost:3000/getHttpData?uri=aaaa::c30c:0:0:3
 router.get('/', function(req, res, next) {
-	var mote_uri = req.query.uri;
-	var duration_sec = req.query.d;
-	var n_hops = req.query.h;
+	var mote_uri 			= req.query.uri;
+	var duration_sec 	= req.query.d;
+	var n_hops 				= req.query.h;
 
   /*-------------------- get Round Trip Time ---------------------*/
   session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
@@ -47,12 +47,12 @@ router.get('/', function(req, res, next) {
      }
 
      if (payload) {
-      h_payload = decoder.write(payload);
+      h_payload 	= decoder.write(payload);
 				//  populate database
       //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-      var string = "";
-      string =String(h_payload);
-      string = string.split(",");
+      var string 	= "";
+      string 			=String(h_payload);
+      string 			= string.split(",");
       MessageID   = (string[0]) ? string[0] : '0' ;
       UpTime      = (string[1]) ? string[1] : '0' ;
       ClockTime   = (string[2]) ? string[2] : '0' ;

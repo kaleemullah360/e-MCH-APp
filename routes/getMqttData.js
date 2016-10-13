@@ -16,18 +16,18 @@ var PrevMsgID		= "nil";
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
-m_payload = "";
+const decoder 			= new StringDecoder('utf8');
+m_payload 					= "";
 // require mqtt library
-var mqtt = require('mqtt')
-, client = mqtt.connect();
+var mqtt 						= require('mqtt')
+, client 						= mqtt.connect();
 //console.log(client);
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
-  var mote_uri = req.query.uri;
-  var duration_sec = req.query.d;
-  var n_hops = req.query.h;
+  var mote_uri 			= req.query.uri;
+  var duration_sec 	= req.query.d;
+  var n_hops 				= req.query.h;
   /*-------------------- get Round Trip Time ---------------------*/
   session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
     RTT = rcvd - sent;
@@ -56,7 +56,7 @@ router.get('/', function(req, res, next) {
               connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
                 if (err) throw err;
               });
-              PrevMsgID = MessageID;
+              PrevMsgID 	= MessageID;
             }
             client.on('error', function(error) {
               request_counter = request_counter + 1;
