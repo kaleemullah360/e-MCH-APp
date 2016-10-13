@@ -37,7 +37,8 @@ console.log("MQTT Socket Status: " + enable_socket + "\n");
  var app = require('../app');
  var debug = require('debug')('e-MCH-APp:server');
  var http = require('http');
- var connection  = require('../config/dbcon'); // path must be relative to file you're in
+ var session     = require('../config/ping'); // include ping configs && path must be relative to file you're in
+ var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 
 /**
  * Get port from environment and store in Express.
@@ -145,23 +146,6 @@ var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT			    = "nil";
-
-/*-------------------- PING Lib Configs ---------------------*/
-// Default options
-var options = {
-	networkProtocol: ping.NetworkProtocol.IPv6,
-	packetSize: 64,
-	retries: 1,
-	sessionId: (process.pid % 65535),
-	timeout: 10000,
-	ttl: 128
-};
-var session = ping.createSession (options);
-
-session.on ("error", function (error) {
-	console.trace (error.toString ());
-});
-/*-------------------- End PING Lib Configs ------------------*/
 
 var request_counter = 1;
 var mote_uri = 'aaaa::c30c:0:0:4';
