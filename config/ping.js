@@ -12,4 +12,4 @@ session.on ("error", function (error) {
 });
 
 // export this module for importing in routes
-module.exports = connection;
+module.exports = session;
