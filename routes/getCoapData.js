@@ -44,7 +44,7 @@ router.get('/', function(req, res, next) {
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
             var string  = "";
-            string      =String(c_payload);
+            string      = String(c_payload);
             string      = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
             UpTime      = (string[1]) ? string[1] : '0' ;
