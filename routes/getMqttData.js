@@ -44,7 +44,7 @@ router.get('/', function(req, res, next) {
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
             var string 		= "";
-            string 				=String(m_payload);
+            string 				=	String(m_payload);
             string 				= string.split(",");
             MessageID   	= (string[0]) ? string[0] : '0' ;
             if(MessageID != PrevMsgID){	// savd this record only if its new request
