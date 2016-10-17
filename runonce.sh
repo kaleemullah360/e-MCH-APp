@@ -55,6 +55,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	sudo npm install -g node-red
 	sudo npm install -g i18next
+	echo "to start/run node-red: node-red"
+	echo ""
 	echo "To open Node-Red use: http://localhost:1880"
     #exit 1
 fi
