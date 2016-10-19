@@ -57,6 +57,7 @@ router.get('/', function(req, res, next) {
                 if (err) throw err;
               });
               PrevMsgID 	= MessageID;
+              
             }
             client.on('error', function(error) {
               request_counter = request_counter + 1;
@@ -69,7 +70,7 @@ router.get('/', function(req, res, next) {
 //            client.end('', function(){console.log("Event: Ended with Acknowledgement sent");});
 //            client.unsubscribe('iot-2/evt/status/fmt/json', function(){console.log("Event: un-subscribed on topic");});
 });
-
+      console.log("Data received  " + m_payload + "\n")
       res.send(m_payload + "," + RTT);
 
       /*-------------------- End get Payload ---------------------*/

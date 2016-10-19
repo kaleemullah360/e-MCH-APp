@@ -44,6 +44,7 @@ router.get('/', function(req, res, next) {
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
             var string  = "";
+            
             string      = String(c_payload);
             string      = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
@@ -55,7 +56,7 @@ router.get('/', function(req, res, next) {
             connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
               if (err) throw err;
           });
-
+            console.log("Data received  " + c_payload + "\n")
             res.send(c_payload + "," + RTT);
         })
         c_req.on('error', function(c_res) {

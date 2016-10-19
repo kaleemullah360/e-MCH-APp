@@ -62,7 +62,7 @@ router.get('/', function(req, res, next) {
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
       	if (err) throw err;
       });
-
+      console.log("Data received  " + h_payload + "\n")
       res.send(h_payload + "," + RTT);
 
     }else{return}
