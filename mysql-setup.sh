@@ -58,3 +58,13 @@ then
 	echo "mysql server successfully install."
     #exit 1
 fi
+
+read -p "Want me to set permission 777? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+
+	sudo chmod -R 777
+	echo "permission 777 successfully set."
+    #exit 1
+fi
