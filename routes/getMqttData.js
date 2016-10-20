@@ -1,6 +1,6 @@
 var express 		= require('express');
 var session  		= require('../config/ping'); // include ping configs && path must be relative to file you're in
-var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
+var connection  	= require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 var router 			= express.Router();
 var mote_uri 		= 'aaaa::c30c:0:0:4';
 
@@ -16,71 +16,71 @@ var PrevMsgID	= "nil";
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
-const decoder 			= new StringDecoder('utf8');
-m_payload 					= "";
+const decoder 		= new StringDecoder('utf8');
+m_payload 			= "";
 // require mqtt library
-var mqtt 						= require('mqtt')
-, client 						= mqtt.connect();
+var mqtt 			= require('mqtt')
+, client 			= mqtt.connect();
 //console.log(client);
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
-  var mote_uri 			= req.query.uri;
-  var duration_sec 	= req.query.d;
-  var n_hops 				= req.query.h;
-  /*-------------------- get Round Trip Time ---------------------*/
-  session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
-    RTT = rcvd - sent;
+	var mote_uri 		= req.query.uri;
+	var duration_sec 	= req.query.d;
+	var n_hops 		= req.query.h;
+	/*-------------------- get Round Trip Time ---------------------*/
+	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
+		RTT = rcvd - sent;
     //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
     if(!rtt_error){
-      /*-------------------- get Payload ---------------------*/
+    	/*-------------------- get Payload ---------------------*/
         // MQTT_0.5Sec_3Hop
         var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-      client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
+    client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
 
-      client.on('message', function(topic, payload) {
-        m_payload 				= decoder.write(payload);
-            //  populate database
-            //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-            var string 		= "";
-            string 				=	String(m_payload);
-            string 				= string.split(",");
-            MessageID   	= (string[0]) ? string[0] : '0' ;
-            if(MessageID != PrevMsgID){	// savd this record only if its new request
-              UpTime      = (string[1]) ? string[1] : '0' ;
-              ClockTime   = (string[2]) ? string[2] : '0' ;
-              Temperature = (string[3]) ? string[3] : '0' ;
-              Battery     = (string[4]) ? string[4] : '0' ;
-              PowTrace    = (string[5]) ? string[5] : '0' ;
-              connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
-                if (err) throw err;
-              });
-              PrevMsgID 	= MessageID;
-              
-            }
-            client.on('error', function(error) {
-              request_counter = request_counter + 1;
-              console.log("[===============< " + request_counter + " >===============]\n");
-              console.log(error);
-              console.log("[==================================]\n");
-              return;
-            })
+    client.on('message', function(topic, payload) {
+    	m_payload	= decoder.write(payload);
+	//  populate database
+	//  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
+	var string 	= "";
+	string 		=	String(m_payload);
+	string 		= string.split(",");
+	MessageID   = (string[0]) ? string[0] : '0' ;
+	if(MessageID != PrevMsgID){	// savd this record only if its new request
+		UpTime      = (string[1]) ? string[1] : '0' ;
+		ClockTime   = (string[2]) ? string[2] : '0' ;
+		Temperature = (string[3]) ? string[3] : '0' ;
+		Battery     = (string[4]) ? string[4] : '0' ;
+		PowTrace    = (string[5]) ? string[5] : '0' ;
+		connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+			if (err) throw err;
+		});
+		PrevMsgID 	= MessageID;
+
+	}
+	client.on('error', function(error) {
+		request_counter = request_counter + 1;
+		console.log("[===============< " + request_counter + " >===============]\n");
+		console.log(error);
+		console.log("[==================================]\n");
+		return;
+	})
 
 //            client.end('', function(){console.log("Event: Ended with Acknowledgement sent");});
 //            client.unsubscribe('iot-2/evt/status/fmt/json', function(){console.log("Event: un-subscribed on topic");});
 });
-      console.log("Data received  " + m_payload + "\n")
-      res.send(m_payload + "," + RTT);
+    console.log("Data received  " + m_payload + "\n")
+    res.send(m_payload + "," + RTT);
 
-      /*-------------------- End get Payload ---------------------*/
-    }else{
-      console.log("MQTT: Ping failed, Device is not reachable, Trying again ... \n");
+    /*-------------------- End get Payload ---------------------*/
+}else{
+	console.log("MQTT: Ping failed, Device is not reachable, Trying again ... \n");
           return;	// No RTT
-        }
+      }
 
-      });
-  /*-------------------- End get Round Trip Time ---------------------*/
+  });
+	/*-------------------- End get Round Trip Time ---------------------*/
 });
 
 module.exports = router;
