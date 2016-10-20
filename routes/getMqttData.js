@@ -12,7 +12,7 @@ var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT         = "nil";
-var PrevMsgID		= "nil";
+var PrevMsgID	= "nil";
 
 var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
