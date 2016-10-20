@@ -47,7 +47,7 @@ request('http://['+mote_uri+']', function (request_error, response, payload) {
 	}
 
 	if (payload) {
-		h_payload 	= decoder.write(payload);
+	h_payload 	= decoder.write(payload);
 	//  populate database
 	//  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
 	var string 	= "";
