@@ -27,8 +27,14 @@ cd ~/kontiki/examples/rime/ && sudo make clean && sudo make TARGET=z1 savetarget
 
 */
 
-var enable_socket = false;
+var enable_socket = true;
+console.log("Server Started: http://localhost:3000/\n");
 console.log("MQTT Socket Status: " + enable_socket + "\n");
+
+
+if(enable_socket == true){
+  console.log("View Socket enabled page: http://localhost:3000/mqtt-sock\n");
+}
 
 /**
  * Module dependencies.
