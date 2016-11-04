@@ -33,8 +33,8 @@ router.get('/', function(req, res, next) {
 		if(!rtt_error){
 		/*-------------------- get Payload ---------------------*/
 			// CoAP_0.5Sec_3Hop
-			var Protocol  = 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-			var c_req     = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
+			var Protocol= 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+			var c_req   = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
 			c_req.on('response', function(c_res) {
 			//console.info("RTT: %dms", RTT);
 			if (!c_res.payload){
