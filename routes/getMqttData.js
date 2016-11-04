@@ -61,7 +61,7 @@ router.get('/', function(req, res, next) {
 	}
 	client.on('error', function(error) {
 		request_counter = request_counter + 1;
-		console.log("[===============< " + request_counter + " >===============]\n");
+		console.log("[===============< MQTT: " + request_counter + " >===============]\n");
 		console.log(error);
 		console.log("[==================================]\n");
 		return;

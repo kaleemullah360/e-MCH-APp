@@ -61,7 +61,7 @@ router.get('/', function(req, res, next) {
 			})
 			c_req.on('error', function(c_res) {
 				request_counter = request_counter + 1;
-				console.log("[===============< " + request_counter + " >===============]\n");
+				console.log("[===============< CoAP: " + request_counter + " >===============]\n");
 				console.log(c_res);
 				console.log("[==================================]\n");
 				return;

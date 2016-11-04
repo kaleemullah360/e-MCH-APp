@@ -40,7 +40,7 @@ request('http://['+mote_uri+']', function (request_error, response, payload) {
 
 	if (request_error) {
 		request_counter = request_counter + 1;
-		console.log("[===============< " + request_counter + " >===============]\n");
+		console.log("[===============< HTTP: " + request_counter + " >===============]\n");
 		console.log(request_error);
 		console.log("[==================================]\n");
 		return;
