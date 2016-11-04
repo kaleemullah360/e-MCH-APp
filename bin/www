@@ -151,7 +151,7 @@ var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT			    = "nil";
+var RTT			= "nil";
 
 var request_counter = 1;
 var mote_uri = 'aaaa::c30c:0:0:4';
@@ -203,7 +203,7 @@ client.on('message', function(topic, payload) {
 
 client.on('error', function(error) {
 	request_counter = request_counter + 1;
-	console.log("[===============< " + request_counter + " >===============]\n");
+	console.log("[===============< MQTT: " + request_counter + " >===============]\n");
 	console.log(error);
 	console.log("[==================================]\n");
 	return;
