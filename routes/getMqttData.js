@@ -27,7 +27,7 @@ var mqtt 			= require('mqtt')
 router.get('/', function(req, res, next) {
 	var mote_uri 		= req.query.uri;
 	var duration_sec 	= req.query.d;
-	var n_hops 		= req.query.h;
+	var n_hops 			= req.query.h;
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
 		RTT = rcvd - sent;
