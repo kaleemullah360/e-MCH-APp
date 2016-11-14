@@ -38,12 +38,12 @@ if(enable_socket == true){
 /**
  * Module dependencies.
  */
-
+ var server     = require('../config/server');
  var session    = require('../config/ping'); // include ping configs && path must be relative to file you're in
  var connection = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
  var decoder    = require('../config/decoder');
  var client  	  = require('../config/mqtt-connector');
- var server    = require('../config/server');
+
 
  var io = require('socket.io')(server);
  io.on('connection', function(socket){
