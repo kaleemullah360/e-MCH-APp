@@ -46,6 +46,7 @@ if(enable_socket == true){
  var session    = require('../config/ping'); // include ping configs && path must be relative to file you're in
  var connection = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
  var decoder    = require('../config/decoder');
+ var client  	= require('../config/mqtt-connector');
 
 /**
  * Get port from environment and store in Express.
@@ -161,10 +162,6 @@ var n_hops = '1'; // Hop counts i.e 3
 // MQTT_0.5Sec_3Hop
 var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 // initialize required libs
-
-var mqtt = require('mqtt')
-, client = mqtt.connect();
-client.subscribe('iot-2/evt/status/fmt/json');
 
 client.on('message', function(topic, payload) {
 	/*-------------------- get Round Trip Time ---------------------*/
