@@ -27,10 +27,9 @@ cd ~/kontiki/examples/rime/ && sudo make clean && sudo make TARGET=z1 savetarget
 
 */
 
-var enable_socket = false;
+var enable_socket = true;
 console.log("Server Started at: http://localhost:3000/\n");
 console.log("MQTT Socket Status: " + enable_socket + "\n");
-
 
 if(enable_socket == true){
   console.log("View Socket enabled page: http://localhost:3000/mqtt-sock\n");
@@ -40,95 +39,11 @@ if(enable_socket == true){
  * Module dependencies.
  */
 
- var app        = require('../app');
- var debug      = require('debug')('e-MCH-APp:server');
- var http       = require('http');
  var session    = require('../config/ping'); // include ping configs && path must be relative to file you're in
  var connection = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
  var decoder    = require('../config/decoder');
- var client  	= require('../config/mqtt-connector');
-
-/**
- * Get port from environment and store in Express.
- */
-
- var port = normalizePort(process.env.PORT || '3000');
- app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
- var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
- server.listen(port);
- server.on('error', onError);
- server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
- function normalizePort(val) {
- 	var port = parseInt(val, 10);
-
- 	if (isNaN(port)) {
-    // named pipe
-    return val;
-}
-
-if (port >= 0) {
-    // port number
-    return port;
-}
-
-return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
- function onError(error) {
- 	if (error.syscall !== 'listen') {
- 		throw error;
- 	}
-
- 	var bind = typeof port === 'string'
- 	? 'Pipe ' + port
- 	: 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-  	case 'EACCES':
-  	console.error(bind + ' requires elevated privileges');
-  	process.exit(1);
-  	break;
-  	case 'EADDRINUSE':
-  	console.error(bind + ' is already in use');
-  	process.exit(1);
-  	break;
-  	default:
-  	throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
- function onListening() {
- 	var addr = server.address();
- 	var bind = typeof addr === 'string'
- 	? 'pipe ' + addr
- 	: 'port ' + addr.port;
- 	debug('Listening on ' + bind);
- }
-
+ var client  	  = require('../config/mqtt-connector');
+ var server    = require('../config/server');
 
  var io = require('socket.io')(server);
  io.on('connection', function(socket){
@@ -153,7 +68,7 @@ var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT			= "nil";
+var RTT			    = "nil";
 
 var request_counter = 1;
 var mote_uri = 'aaaa::c30c:0:0:4';
