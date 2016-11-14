@@ -13,7 +13,10 @@ var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT         = "nil";
-
+var mote_uri 	= "nil";
+var duration_sec= "nil";
+var n_hops 		= "nil";
+var Protocol	= "nil";
 var request_counter = 1;
 
 // for making reuest
@@ -22,10 +25,11 @@ var request 		= require('request');
 /* GET HTTP Data. */
 //	http://localhost:3000/getHttpData?uri=aaaa::c30c:0:0:3
 router.get('/', function(req, res, next) {
-	var mote_uri 		= req.query.uri;
-	var duration_sec 	= req.query.d;
-	var n_hops 			= req.query.h;
-
+	mote_uri 		= req.query.uri;
+	duration_sec 	= req.query.d;
+	n_hops 			= req.query.h;
+	// HTTP_0.5Sec_3Hop
+	Protocol = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
 		RTT = rcvd - sent;
@@ -33,8 +37,6 @@ router.get('/', function(req, res, next) {
 
 if(!rtt_error){
 	/*-------------------- get Payload ---------------------*/
-// HTTP_0.5Sec_3Hop
-var Protocol = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 request('http://['+mote_uri+']', function (request_error, response, payload) {
 
 	if (request_error) {
