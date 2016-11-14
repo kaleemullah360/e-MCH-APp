@@ -31,16 +31,15 @@ router.get('/', function(req, res, next) {
 	mote_uri 		= req.query.uri;
 	duration_sec 	= req.query.d;
 	n_hops 			= req.query.h;
+    // MQTT_0.5Sec_3Hop
+    Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
 		RTT = rcvd - sent;
     //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
     if(!rtt_error){
-    	/*-------------------- get Payload ---------------------*/
-        // MQTT_0.5Sec_3Hop
-        Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-    
+    	/*-------------------- get Payload ---------------------*/  
 
     client.on('message', function(topic, payload) {
     	m_payload	= decoder.write(payload);
