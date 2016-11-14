@@ -2,6 +2,7 @@ var express 	= require('express');
 var session  	= require('../config/ping'); // include ping configs && path must be relative to file you're in
 var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 var decoder  	= require('../config/decoder');
+var client  	= require('../config/mqtt-connector');
 var router 		= express.Router();
 var mote_uri 	= 'aaaa::c30c:0:0:4';
 
@@ -18,9 +19,7 @@ var PrevMsgID	= "nil";
 var request_counter = 1;
 
 m_payload 			= "";
-// require mqtt library
-var mqtt 			= require('mqtt')
-, client 			= mqtt.connect();
+
 //console.log(client);
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
@@ -37,7 +36,7 @@ router.get('/', function(req, res, next) {
     	/*-------------------- get Payload ---------------------*/
         // MQTT_0.5Sec_3Hop
         var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-    client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
+    
 
     client.on('message', function(topic, payload) {
     	m_payload	= decoder.write(payload);
