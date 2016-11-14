@@ -40,11 +40,12 @@ if(enable_socket == true){
  * Module dependencies.
  */
 
- var app = require('../app');
- var debug = require('debug')('e-MCH-APp:server');
- var http = require('http');
- var session     = require('../config/ping'); // include ping configs && path must be relative to file you're in
- var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
+ var app        = require('../app');
+ var debug      = require('debug')('e-MCH-APp:server');
+ var http       = require('http');
+ var session    = require('../config/ping'); // include ping configs && path must be relative to file you're in
+ var connection = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
+ var decoder    = require('../config/decoder');
 
 /**
  * Get port from environment and store in Express.
@@ -160,8 +161,6 @@ var n_hops = '1'; // Hop counts i.e 3
 // MQTT_0.5Sec_3Hop
 var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 // initialize required libs
-const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
 
 var mqtt = require('mqtt')
 , client = mqtt.connect();
