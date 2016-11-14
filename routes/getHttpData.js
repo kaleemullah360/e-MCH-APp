@@ -2,6 +2,7 @@ var express 	= require('express');
 var session  	= require('../config/ping'); // include ping configs && path must be relative to file you're in
 var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 var decoder  	= require('../config/decoder');
+var request  	= require('../config/http-connector');
 var router 		= express.Router();
 var mote_uri 	= 'aaaa::c30c:0:0:3';
 
@@ -18,9 +19,6 @@ var duration_sec= "nil";
 var n_hops 		= "nil";
 var Protocol	= "nil";
 var request_counter = 1;
-
-// for making reuest
-var request 		= require('request');
 
 /* GET HTTP Data. */
 //	http://localhost:3000/getHttpData?uri=aaaa::c30c:0:0:3
