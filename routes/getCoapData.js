@@ -2,7 +2,8 @@ var express     = require('express');
 var session  	= require('../config/ping'); // include ping configs && path must be relative to file you're in
 var connection  = require('../config/dbcon'); // include mysql connection object && path must be relative to file you're in
 var decoder  	= require('../config/decoder');
-var router      = express.Router();
+var decoder  	= require('../config/coap-connector');
+var coap      	= express.Router();
 var mote_uri    = 'aaaa::c30c:0:0:2';
 
 // variables
@@ -14,16 +15,21 @@ var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT         = "nil";
 
+var mote_uri    = "nil";
+var duration_sec= "nil";
+var n_hops      = "nil";
+var Protocol	= "nil";
+
 var request_counter = 1;
-var coap            = require('coap')
 
 /* GET CoAP Data. */
 //	http://localhost:3000/getCoapData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
-	var mote_uri    = req.query.uri;
-	var duration_sec= req.query.d;
-	var n_hops      = req.query.h;
-
+	mote_uri    = req.query.uri;
+	duration_sec= req.query.d;
+	n_hops      = req.query.h;
+	// CoAP_0.5Sec_3Hop
+	Protocol= 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
 		RTT = rcvd - sent;
@@ -31,8 +37,7 @@ router.get('/', function(req, res, next) {
 
 		if(!rtt_error){
 		/*-------------------- get Payload ---------------------*/
-			// CoAP_0.5Sec_3Hop
-			var Protocol= 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+
 			var c_req   = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
 			c_req.on('response', function(c_res) {
 			//console.info("RTT: %dms", RTT);
