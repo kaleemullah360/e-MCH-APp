@@ -16,6 +16,10 @@ var PowTrace    = "nil";
 var RTT         = "nil";
 var PrevMsgID	= "nil";
 
+var mote_uri 	= "nil";
+var duration_sec= "nil";
+var n_hops 		= "nil";
+var Protocol	= "nil";
 var request_counter = 1;
 
 m_payload 			= "";
@@ -24,9 +28,9 @@ m_payload 			= "";
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
-	var mote_uri 		= req.query.uri;
-	var duration_sec 	= req.query.d;
-	var n_hops 			= req.query.h;
+	mote_uri 		= req.query.uri;
+	duration_sec 	= req.query.d;
+	n_hops 			= req.query.h;
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
 		RTT = rcvd - sent;
@@ -35,7 +39,7 @@ router.get('/', function(req, res, next) {
     if(!rtt_error){
     	/*-------------------- get Payload ---------------------*/
         // MQTT_0.5Sec_3Hop
-        var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+        Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
     
 
     client.on('message', function(topic, payload) {
