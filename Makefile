@@ -19,9 +19,18 @@ ifeq ($(c),)
 endif
 
 push:
+ifeq ($(USER),"root")
+	@echo "root user, will not push to repository, try with standard user"
+else
+	@echo "su user"
 	git add -A
 	git commit -m $(c)
 	git push origin master
+endif
+
+	#git add -A
+	#git commit -m $(c)
+	#git push origin master
 
 pull:
 	git pull origin master
