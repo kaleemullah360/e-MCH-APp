@@ -23,7 +23,7 @@ ifeq ($(USER),root)
 	@echo "root user, will not push to repository, try with standard user"
 else
 	@#	make commit m="Added-some-test"
-	@echo $(USER)	
+	@echo "Current USER: $(USER)"	
 	git add -A
 	git commit -m $(m)
 	git push origin master
