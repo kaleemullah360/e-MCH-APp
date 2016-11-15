@@ -39,8 +39,11 @@ mysql-fix:
 	@echo "use mysql;"
 	@echo "update user set authentication_string=password(''), plugin='mysql_native_password' where user='root';"
 	@echo "sudo service mysql restart"
+	@firefox https://github.com/mysqljs/mysql/issues/1574#issuecomment-260563863
 
 mysql-change-password:
+	@echo "Change MySQL Root User password to Abcd1234"
+	@echo 
 	@echo "mysqld_safe --skip-grant-tables"
 	@echo "mysql --user=root mysql"
 	@echo "use mysql"
@@ -49,6 +52,8 @@ mysql-change-password:
 	@echo "update user set authentication_string=password('Abcd1234') where user='root'"
 
 mysql-remove:
+	@echo "Completly remove MySQL Server"
+	@echo 
 	@echo "sudo service mysql stop  #or mysqld"
 	@echo "sudo killall -9 mysql"
 	@echo "sudo killall -9 mysqld"
