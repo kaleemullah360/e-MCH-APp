@@ -14,17 +14,18 @@ view-project:
 view-profile:
 	firefox https://github.com/kaleemullah360 &
 
-ifeq ($(c),)
- c = 'updates'
+ifeq ($(m),)
+ m = 'updates'
 endif
 
 push:
 ifeq ($(USER),root)
 	@echo "root user, will not push to repository, try with standard user"
 else
-	@echo "su user"
+	@#	make commit m="Added-some-test"
+	@echo $(USER)	
 	git add -A
-	git commit -m $(c)
+	git commit -m $(m)
 	git push origin master
 endif
 
