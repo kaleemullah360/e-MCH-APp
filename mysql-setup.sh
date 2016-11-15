@@ -12,21 +12,17 @@
 #  Kaleem Ullah <mscs14059@itu.edu.pk> <kaleemullah360@live.com>               #
 ################################################################################
 
-
-read -p "Change mysql root password? (y/n)" -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-	mysqld_safe --skip-grant-tables
-	mysql --user=root mysql
-	use mysql;
-	show tables;
-	describe user;
-	update user set authentication_string=password('Abcd1234') where user='root';
-	echo "user root password changed new password is Abcd1234."
-    #exit 1
-fi
-
+#@First choose the database:
+#@
+#@mysql>use mysql;
+#@
+#@And then show the tables:
+#@
+#@mysql>show tables;
+#@
+#@You will find the user table, now let's see its fields:
+#@
+#@mysql> describe user;
 
 read -p "completetly remove mysql server 5.7? (y/n)" -n 1 -r
 echo    # (optional) move to a new line
