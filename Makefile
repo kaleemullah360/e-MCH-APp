@@ -45,6 +45,7 @@ mysql-fix:
 	@echo "use mysql;"
 	@echo "update user set authentication_string=password(''), plugin='mysql_native_password' where user='root';"
 	@echo "sudo service mysql restart"
+	@echo "uninstall plugin validate_password;"
 	@firefox https://github.com/mysqljs/mysql/issues/1574#issuecomment-260563863
 
 mysql-change-password:
