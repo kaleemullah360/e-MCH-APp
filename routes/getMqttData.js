@@ -30,16 +30,16 @@ m_payload 			= "";
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
 
-	if(node_id == "nil"){
+	if(node_id == "nil" || node_id != mote_uri.substr(-1)){
 		mote_uri 		= req.query.uri;
 		node_id = mote_uri.substr(-1);
 		client.subscribe("emch/mqtt/server/" + node_id, function(){
 			console.log("Event: Subscribed on topic: " + "emch/mqtt/server/" + node_id); 
 		});
 		// some topics
-		// emch/mqtt/server/1
 		// emch/mqtt/server/2
 		// emch/mqtt/server/3
+		// emch/mqtt/server/4
 		// emch/mqtt/hop/a
 		// emch/mqtt/hop/b
 		// emch/mqtt/hop/c
