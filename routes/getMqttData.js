@@ -28,9 +28,26 @@ m_payload 			= "";
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:4
 router.get('/', function(req, res, next) {
-	mote_uri 		= req.query.uri;
+
+	if(mote_uri == "nil"){
+		mote_uri 		= req.query.uri;
+
+		client.subscribe(String(mote_uri), function(){ 
+			console.log("Event: Subscribed on topic: " + String(mote_uri)); 
+		});
+		// some topics
+		// emch/mqtt/server/a
+		// emch/mqtt/server/b
+		// emch/mqtt/server/c
+		// emch/mqtt/hop/a
+		// emch/mqtt/hop/b
+		// emch/mqtt/hop/c
+	}
+
 	duration_sec 	= req.query.d;
 	n_hops 			= req.query.h;
+
+
     // MQTT_0.5Sec_3Hop
     Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 	/*-------------------- get Round Trip Time ---------------------*/
