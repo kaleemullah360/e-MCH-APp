@@ -23,15 +23,15 @@ var n_hops 		= "nil";
 var Protocol	= "nil";
 var request_counter = 1;
 
-m_payload 			= "";
+m_payload 		= "";
 
 //console.log(client);
 /* GET MQTT Data. */
 //	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
 
-	if(node_id == "nil" || node_id != mote_uri.substr(-1)){
-		mote_uri 		= req.query.uri;
+	if(node_id == "nil"){
+		mote_uri= req.query.uri;
 		node_id = mote_uri.substr(-1);
 		client.subscribe("emch/mqtt/server/" + node_id, function(){
 			console.log("Event: Subscribed on topic: " + "emch/mqtt/server/" + node_id); 
@@ -45,8 +45,8 @@ router.get('/', function(req, res, next) {
 		// emch/mqtt/hop/c
 	}
 
-	duration_sec 	= req.query.d;
-	n_hops 			= req.query.h;
+	duration_sec= req.query.d;
+	n_hops 		= req.query.h;
 
 
     // MQTT_0.5Sec_3Hop
@@ -73,10 +73,10 @@ router.get('/', function(req, res, next) {
 		Temperature = (string[3]) ? string[3] : '0' ;
 		Battery     = (string[4]) ? string[4] : '0' ;
 		PowTrace    = (string[5]) ? string[5] : '0' ;
-		/*connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+		connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
 			if (err) throw err;
 		});
-		*/
+		
 		PrevMsgID 	= MessageID;
 
 	}
