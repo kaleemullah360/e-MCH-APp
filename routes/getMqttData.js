@@ -4,7 +4,7 @@ var connection  = require('../config/dbcon'); // include mysql connection object
 var decoder  	= require('../config/decoder');
 var client  	= require('../config/mqtt-connector');
 var router 		= express.Router();
-var mote_uri 	= 'aaaa::c30c:0:0:4';
+var mote_uri 	= 'aaaa::c30c:0:0:2';
 
 // variables
 var MessageID   = "nil";
@@ -27,7 +27,7 @@ m_payload 			= "";
 
 //console.log(client);
 /* GET MQTT Data. */
-//	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:1
+//	http://localhost:3000/getMqttData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
 
 	if(node_id == "nil"){
