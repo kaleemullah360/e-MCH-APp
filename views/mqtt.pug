@@ -55,6 +55,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     $('#show-temp').prepend('<li><span>' + data + '</span></li>');
     PrevMessageID = MessageID;
     index++;
+    console.log("MsgID " + index + " limit " + limit);
     }
     },
     error: function(data) {
