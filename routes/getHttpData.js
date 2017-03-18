@@ -28,12 +28,7 @@ router.get('/', function(req, res, next) {
 	n_hops 			= req.query.h;
 	// HTTP_0.5Sec_3Hop
 	Protocol = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-	/*-------------------- get Round Trip Time ---------------------*/
-	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
-		RTT = rcvd - sent;
-//console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
-if(!rtt_error){
 	/*-------------------- get Payload ---------------------*/
 request('http://['+mote_uri+']', function (request_error, response, payload) {
 
@@ -46,35 +41,42 @@ request('http://['+mote_uri+']', function (request_error, response, payload) {
 	}
 
 	if (payload) {
-	h_payload 	= decoder.write(payload);
-	//  populate database
-	//  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-	var string 	= "";
-	string 		=	String(h_payload);
-	string 		= string.split(",");
-	MessageID   = (string[0]) ? string[0] : '0' ;
-	UpTime      = (string[1]) ? string[1] : '0' ;
-	ClockTime   = (string[2]) ? string[2] : '0' ;
-	Temperature = (string[3]) ? string[3] : '0' ;
-	Battery     = (string[4]) ? string[4] : '0' ;
-	PowTrace    = (string[5]) ? string[5] : '0' ;
-	connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
-	if (err) throw err;
+
+	/*-------------------- get Round Trip Time ---------------------*/
+	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
+
+		if(!rtt_error){
+			RTT = rcvd - sent;
+			//console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
+			h_payload 	= decoder.write(payload);
+			//  populate database
+			//  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
+			var string 	= "";
+			string 		=	String(h_payload);
+			string 		= string.split(",");
+			MessageID   = (string[0]) ? string[0] : '0' ;
+			UpTime      = (string[1]) ? string[1] : '0' ;
+			ClockTime   = (string[2]) ? string[2] : '0' ;
+			Temperature = (string[3]) ? string[3] : '0' ;
+			Battery     = (string[4]) ? string[4] : '0' ;
+			PowTrace    = (string[5]) ? string[5] : '0' ;
+			connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {
+			if (err) throw err;
+			});
+			console.log("Data received  " + h_payload + "\n")
+			res.send(h_payload + "," + RTT);
+		}else{
+			console.log("HTTP: Ping failed, Device is not reachable, Trying again ... \n");
+		return; // No RTT
+		}
 	});
-	console.log("Data received  " + h_payload + "\n")
-	res.send(h_payload + "," + RTT);
+		/*-------------------- End get Round Trip Time ---------------------*/
 
 	}else{return}
 })
 
 /*-------------------- End get Payload ---------------------*/
-}else{
-	console.log("HTTP: Ping failed, Device is not reachable, Trying again ... \n");
-return; // No RTT
-}
 
-});
-	/*-------------------- End get Round Trip Time ---------------------*/
 });
 
 module.exports = router;

@@ -25,25 +25,26 @@ var request_counter = 1;
 /* GET CoAP Data. */
 //	http://localhost:3000/getCoapData?uri=aaaa::c30c:0:0:2
 router.get('/', function(req, res, next) {
-	mote_uri    = req.query.uri;
-	duration_sec= req.query.d;
-	n_hops      = req.query.h;
-	// CoAP_0.5Sec_3Hop
-	Protocol= 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+mote_uri    = req.query.uri;
+duration_sec= req.query.d;
+n_hops      = req.query.h;
+// CoAP_0.5Sec_3Hop
+Protocol= 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+
+/*-------------------- get Payload ---------------------*/
+
+	var c_req   = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
+	c_req.on('response', function(c_res) {
+	//console.info("RTT: %dms", RTT);
+	if (!c_res.payload){
+		return;	
+	}
+
 	/*-------------------- get Round Trip Time ---------------------*/
 	session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
-		RTT = rcvd - sent;
-		//console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 
 		if(!rtt_error){
-		/*-------------------- get Payload ---------------------*/
-
-			var c_req   = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
-			c_req.on('response', function(c_res) {
-			//console.info("RTT: %dms", RTT);
-			if (!c_res.payload){
-				return;	
-			}
+			RTT = rcvd - sent;
 			c_payload   = decoder.write(c_res.payload);
 			//  populate database
 			//  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
@@ -62,24 +63,27 @@ router.get('/', function(req, res, next) {
 			});
 			console.log("Data received  " + c_payload + "\n")
 			res.send(c_payload + "," + RTT);
-			})
-			c_req.on('error', function(c_res) {
-				request_counter = request_counter + 1;
-				console.log("[===============< CoAP: " + request_counter + " >===============]\n");
-				console.log(c_res);
-				console.log("[==================================]\n");
-				return;
-			})
-			c_req.end()
-
-		/*-------------------- End get Payload ---------------------*/
+			//console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
 		}else{
 			console.log("CoAP: Ping failed, Device is not reachable, Trying again ... \n");
-		return;	// No RTT
+			return;	// No RTT
 		}
 
-});
-	/*-------------------- End get Round Trip Time ---------------------*/
+	});
+		/*-------------------- End get Round Trip Time ---------------------*/
+
+
+	})
+	c_req.on('error', function(c_res) {
+		request_counter = request_counter + 1;
+		console.log("[===============< CoAP: " + request_counter + " >===============]\n");
+		console.log(c_res);
+		console.log("[==================================]\n");
+		return;
+	})
+	c_req.end()
+
+/*-------------------- End get Payload ---------------------*/
 });
 
 module.exports = router;
