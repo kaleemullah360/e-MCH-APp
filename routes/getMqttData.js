@@ -4,7 +4,7 @@ var connection  = require('../config/dbcon'); // include mysql connection object
 var decoder  	= require('../config/decoder');
 var client  	= require('../config/mqtt-connector');
 var router 		= express.Router();
-var mote_uri 	= 'aaaa::c30c:0:0:2';
+var mote_uri 	= 'aaaa::c30c:0:0:4';
 
 // variables
 var MessageID   = "nil";

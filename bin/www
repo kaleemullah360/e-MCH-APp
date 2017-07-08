@@ -27,13 +27,10 @@ cd ~/kontiki/examples/rime/ && sudo make clean && sudo make TARGET=z1 savetarget
 
 */
 
-var enable_socket = false;
+var enable_socket = true;
 console.log("Server Started at: http://localhost:3000/\n");
 console.log("MQTT Socket Status: " + enable_socket + "\n");
 
-if(enable_socket == true){
-  console.log("View Socket enabled page: http://localhost:3000/mqtt-sock\n");
-}
 
 /**
  * Module dependencies.
@@ -44,18 +41,20 @@ if(enable_socket == true){
  var decoder    = require('../config/decoder');
  var client  	  = require('../config/mqtt-connector');
 
+if(enable_socket == true){
+  console.log("View Socket enabled page: http://localhost:3000/mqtt-sock\n");
+}
+   var io = require('socket.io')(server);
+   io.on('connection', function(socket){
+   	console.log("User Connected");
+    // Not a Good Way
+    //socket.emit('wsn-data',{data: "10,100,100,100,100"});
 
- var io = require('socket.io')(server);
- io.on('connection', function(socket){
- 	console.log("User Connected");
-  // Not a Good Way
-  //socket.emit('wsn-data',{data: "10,100,100,100,100"});
+    socket.on('disconnect', function () {
+    	console.log("User Disconnected");
+    });
 
-  socket.on('disconnect', function () {
-  	console.log("User Disconnected");
   });
-
-});
 
 /**
  * Event listener for Socket Based MQTT Protocol.
@@ -69,14 +68,30 @@ var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
 var RTT			    = "nil";
+var conActive   = "nil";
 
 var request_counter = 1;
 var mote_uri = 'aaaa::c30c:0:0:4';
-var duration_sec = '1';	// seconds i.e 0.5
-var n_hops = '1'; // Hop counts i.e 3
+var duration_sec = '0.5';	// seconds i.e 0.5
+var n_hops = '3'; // Hop counts i.e 3
 // MQTT_0.5Sec_3Hop
 var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 // initialize required libs
+
+if(conActive == "nil"){
+  node_id = mote_uri.substr(-1);
+  client.subscribe("emch/mqtt/server/" + node_id, function(){
+    conActive = "subscribed"
+    console.log("Event: Subscribed on topic: " + "emch/mqtt/server/" + node_id); 
+  });
+  // some topics
+  // emch/mqtt/server/2
+  // emch/mqtt/server/3
+  // emch/mqtt/server/4
+  // emch/mqtt/hop/a
+  // emch/mqtt/hop/b
+  // emch/mqtt/hop/c
+}
 
 client.on('message', function(topic, payload) {
 	/*-------------------- get Round Trip Time ---------------------*/
