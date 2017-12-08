@@ -17,7 +17,7 @@
     "morgan": "~1.6.1",
     "mqtt": "^1.8.0",
     "mysql": "^2.10.2",
-    "net-ping": "^1.2.0",
+    "net-ping": "^1.2.1",
     "pug": "^2.0.0-beta6",
     "request": "^2.70.0",
     "serve-favicon": "~2.3.0",

@@ -27,7 +27,7 @@ cd ~/kontiki/examples/rime/ && sudo make clean && sudo make TARGET=z1 savetarget
 
 */
 
-var enable_socket = true;
+var enable_socket = false;
 console.log("Server Started at: http://localhost:3000/\n");
 console.log("MQTT Socket Status: " + enable_socket + "\n");
 
@@ -80,7 +80,7 @@ var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
 
 if(conActive == "nil"){
   node_id = mote_uri.substr(-1);
-  client.subscribe("emch/mqtt/server/" + node_id, function(){
+  client.subscribe("rtgs/obs/moves", function(){
     conActive = "subscribed"
     console.log("Event: Subscribed on topic: " + "emch/mqtt/server/" + node_id); 
   });
@@ -104,7 +104,7 @@ client.on('message', function(topic, payload) {
 
 	//  populate database
       //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
-      var string = "";
+ /*     var string = "";
       string =String(m_payload);
       string = string.split(",");
       MessageID   = (string[0]) ? string[0] : '0' ;
@@ -115,7 +115,7 @@ client.on('message', function(topic, payload) {
       PowTrace    = (string[5]) ? string[5] : '0' ;
      
       connection.query('INSERT INTO `emch-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Protocol, RTT, PowTrace) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Protocol+'\', \''+RTT+'\', \''+PowTrace+'\')', function(err, rows, fields) {if (err) throw err;});
-	
+	*/
       io.sockets.emit('wsn-data', {"data": m_payload + "," + RTT});
       /*-------------------- End get Payload ---------------------*/
   }else{
